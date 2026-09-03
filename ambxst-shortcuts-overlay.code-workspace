@@ -1,12 +1,8 @@
 {
     "folders": [
         {
-            "name": "Shortcuts Overlay Project",
+            "name": "Shortcuts Overlay — Canonical Project",
             "path": "."
-        },
-        {
-            "name": "Ambxst Configuration",
-            "path": "../../.dotfiles/ambxst/.config/ambxst"
         }
     ],
     "settings": {

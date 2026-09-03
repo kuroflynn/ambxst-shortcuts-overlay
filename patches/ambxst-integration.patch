@@ -1,0 +1,72 @@
+diff --git a/modules/services/GlobalShortcuts.qml b/modules/services/GlobalShortcuts.qml
+index e6e0ae0f52df1b4f02e06692bc9ca43419b38fad..a9a00916c443265a5bc1fa7e8b1a3a63f32caaa7 100644
+--- a/modules/services/GlobalShortcuts.qml
++++ b/modules/services/GlobalShortcuts.qml
+@@ -55,6 +55,7 @@ QtObject {
+             case "overview": toggleSimpleModule("overview"); break;
+             case "powermenu": toggleSimpleModule("powermenu"); break;
+             case "tools": toggleSimpleModule("tools"); break;
++            case "shortcuts": toggleSimpleModule("shortcuts"); break;
+             case "config": toggleSettings(); break;
+             case "screenshot": Screenshot.initialize(); GlobalStates.screenshotToolVisible = true; break;
+             case "screenrecord":
+diff --git a/modules/services/Visibilities.qml b/modules/services/Visibilities.qml
+index ee97b092f32a5743c285fe7aea97d089787ac9c0..994282f715787f188414b6c9905a6108a94d0194 100644
+--- a/modules/services/Visibilities.qml
++++ b/modules/services/Visibilities.qml
+@@ -19,7 +19,7 @@ Singleton {
+     property string lastFocusedScreen: ""
+     property var contextMenu: null
+     property bool playerMenuOpen: false
+-    readonly property var moduleNames: ["launcher", "dashboard", "overview", "powermenu", "tools", "presets"]
+-
++    readonly property var moduleNames: ["launcher", "dashboard", "overview", "powermenu", "tools", "presets", "shortcuts"]
++
+     // BarPopup registry keyed by groupId. Each entry is a list of
+     // currently-open BarPopup instances belonging to that group.
+@@ -210,9 +210,10 @@ Singleton {
+             property bool powermenu: false
+             property bool tools: false
+             property bool presets: false
++            property bool shortcuts: false
+         }
+     }
+-
++
+     function clearAll() {
+         for (const screenName in screens) {
+             const screenProps = screens[screenName];
+diff --git a/shell.qml b/shell.qml
+index 888996d37bac9a9c76c34e0610a913cf963298c0..94ad3956a75f6a288b74003c719bd3f6a3a4fa24 100644
+--- a/shell.qml
++++ b/shell.qml
+@@ -14,6 +14,7 @@ import qs.modules.widgets.dashboard.wallpapers
+ import qs.modules.notch
+ import qs.modules.widgets.overview
+ import qs.modules.widgets.presets
++import qs.modules.widgets.shortcuts
+ import qs.modules.services
+ import qs.modules.corners
+ import qs.modules.frame
+@@ -164,6 +165,20 @@ ShellRoot {
+         }
+     }
+-
++
++    // Keyboard shortcuts overlay
++    Variants {
++        model: Quickshell.screens
++
++        Loader {
++            id: shortcutsLoader
++            active: SuspendManager.wakeReady && (Visibilities.getForScreen(modelData.name) ? Visibilities.getForScreen(modelData.name).shortcuts : false)
++            required property ShellScreen modelData
++            sourceComponent: ShortcutsOverlay {
++                screen: shortcutsLoader.modelData
++            }
++        }
++    }
++
+     // Secure WlSessionLock lockscreen
+     WlSessionLock {
+         id: sessionLock

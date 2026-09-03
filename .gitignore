@@ -3,5 +3,6 @@
 *.qmlc
 *.jsc
 *.bak
+ambxst-shortcuts-overlay.local.code-workspace
 
 references/*

@@ -1,8 +1,21 @@
 # Ambxst keyboard-shortcuts overlay
 
-Status: Draft 0.1  
+Status: Draft 0.2 — canonical-project migration
 Target environment: Arch Linux, Hyprland, Quickshell, Ambxst  
 Primary language: Spanish
+
+## 0. Project architecture and current phase
+
+- This repository is the independent project and the only editable source of truth.
+- Canonical overlay files live under `src/`; the focused integration for Ambxst shared files lives under `patches/`.
+- The resolved Ambxst source, with `$HOME/.local/src/ambxst` as portable fallback, is only an installation and runtime-test target. Development must not occur directly there.
+- The user's Ambxst dotfiles remain declarative configuration and must not contain project files.
+- Development, tests, review, and versioning happen here before deliberate installation.
+- Installation and uninstallation must be scoped, idempotent, and must never reload Ambxst or restart Quickshell automatically.
+- The scripts resolve their target, in order, from an explicit argument, `AMBXST_SOURCE_DIR`, `${XDG_DATA_HOME:-$HOME/.local/share}/ambxst/shell_repo`, or `$HOME/.local/src/ambxst`. The result must be an absolute, existing, validated Ambxst Git root and must reject dangerous broad roots.
+- The tracked workspace contains only this project. Optional external roots belong in an ignored, machine-local workspace file.
+- `references/` remains local, optional, ignored by Git, and unnecessary in a clone.
+- Registration of `SUPER + F1` and every modification to `binds.json` are deferred to a later phase. Acceptance criterion 1 therefore remains explicitly unresolved in the current phase.
 
 ## 1. Purpose
 
@@ -115,6 +128,8 @@ The exact QML files and services to modify are intentionally not prescribed here
 - Avoid network access and new runtime dependencies.
 - Parsing, grouping, and sorting should complete quickly enough that opening feels immediate.
 - Repeated toggling must not leak components, create duplicate shortcuts, or leave invisible focus-grabbing windows.
+- Installation and uninstallation remain transactional until their final verification succeeds. Rollback operations must first confirm that their patch direction still applies and that project-owned files still match the canonical source.
+- A concurrent modification during rollback must never be overwritten or deleted. Any unsafe or failed rollback operation must remain visible as a manual-recovery error naming the affected path; critical failures must not be suppressed.
 
 ## 8. Out of scope
 
@@ -147,20 +162,24 @@ The first version is accepted when all of the following are true:
 
 ## 10. Delivery workflow
 
-1. Open `ambxst-shortcuts-overlay.code-workspace` in VS Code.
-2. Confirm that both the project and the real Ambxst configuration folders are available.
+1. Open `ambxst-shortcuts-overlay.code-workspace` in VS Code; it intentionally tracks only the project root.
+2. Resolve and inspect the external Ambxst installation target. Add optional external roots only to an ignored machine-local workspace.
 3. Read `AGENTS.md` and this document.
-4. Inspect the installed Ambxst architecture and current Git state.
-5. Present the proposed integration points before editing.
-6. Implement and validate incrementally.
-7. Review the complete diff with the user.
-8. Commit, tag, or push only after explicit user approval.
+4. Inspect the installed Ambxst architecture and Git state without developing in that external tree.
+5. Present the proposed canonical and integration files before editing.
+6. Implement and validate incrementally in this repository.
+7. Run `scripts/verify.sh`, then review and version the complete project diff.
+8. Install deliberately with `scripts/install.sh` only after explicit approval.
+9. Reload separately only after explicit approval and confirmation of a recent safety checkpoint.
+10. Commit, tag, or push only after explicit user approval.
 
 ## 11. Known environment context
 
 - The Ambxst configuration is maintained through the user's dotfiles repository.
 - The expected tracked source is `~/.dotfiles/ambxst/.config/ambxst`.
 - The expected runtime path is `~/.config/ambxst`; verify whether it is a symlink before editing.
+- The portable fallback installation/test source tree is `$HOME/.local/src/ambxst`; it is not the overlay's source of truth and may be overridden through the documented resolution order.
+- Canonical overlay development belongs only in this repository under `src/` and `patches/`.
 - Current Ambxst configuration includes a sizeable `binds.json` with both built-in and custom bindings.
 - The system uses Hyprland and Quickshell on Arch Linux.
 - The external display is 2560×1440, and the laptop display is 2560×1600 with scaling; the panel must remain usable on both.
