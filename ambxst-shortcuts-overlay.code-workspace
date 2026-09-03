@@ -1,0 +1,16 @@
+{
+    "folders": [
+        {
+            "name": "Shortcuts Overlay Project",
+            "path": "."
+        },
+        {
+            "name": "Ambxst Configuration",
+            "path": "../../.dotfiles/ambxst/.config/ambxst"
+        }
+    ],
+    "settings": {
+        "files.trimTrailingWhitespace": true,
+        "editor.formatOnSave": false
+    }
+}
