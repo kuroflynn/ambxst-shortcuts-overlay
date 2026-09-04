@@ -1,6 +1,6 @@
 # Ambxst keyboard-shortcuts overlay
 
-Status: Draft 0.2 — canonical-project migration
+Status: `v0.1.0` — prepared and validated on Ambxst `1.2.6`
 Target environment: Arch Linux, Hyprland, Quickshell, Ambxst  
 Primary language: Spanish
 
@@ -10,12 +10,12 @@ Primary language: Spanish
 - Canonical overlay files live under `src/`; the focused integration for Ambxst shared files lives under `patches/`.
 - The resolved Ambxst source, with `$HOME/.local/src/ambxst` as portable fallback, is only an installation and runtime-test target. Development must not occur directly there.
 - The user's Ambxst dotfiles remain declarative configuration and must not contain project files.
-- Development, tests, review, and versioning happen here before deliberate installation.
+- Development, tests, review, and versioning happen here before deliberate installation. The `v0.1.0` installation, uninstall, and reinstall have been verified in the real target.
 - Installation and uninstallation must be scoped, idempotent, and must never reload Ambxst or restart Quickshell automatically.
 - The scripts resolve their target, in order, from an explicit argument, `AMBXST_SOURCE_DIR`, `${XDG_DATA_HOME:-$HOME/.local/share}/ambxst/shell_repo`, or `$HOME/.local/src/ambxst`. The result must be an absolute, existing, validated Ambxst Git root and must reject dangerous broad roots.
 - The tracked workspace contains only this project. Optional external roots belong in an ignored, machine-local workspace file.
 - `references/` remains local, optional, ignored by Git, and unnecessary in a clone.
-- Registration of `SUPER + F1` and every modification to `binds.json` are deferred to a later phase. Acceptance criterion 1 therefore remains explicitly unresolved in the current phase.
+- The installed overlay is exposed as `ambxst run shortcuts`. The suggested `SUPER + /` bind belongs to the user's personal configuration and is never modified by `install.sh` or `uninstall.sh`; after uninstalling, the user removes that bind manually if it is no longer wanted.
 
 ## 1. Purpose
 
@@ -35,12 +35,13 @@ The current shortcut collection is already large enough that memorizing every co
 
 ### 3.1 Opening and closing
 
-- `SUPER + F1` toggles the overlay.
-- Pressing `SUPER + F1` while it is open closes it.
+- `ambxst run shortcuts` toggles the overlay directly.
+- The configured personal shortcut `SUPER + /` toggles the overlay.
+- Pressing `SUPER + /` while it is open closes it.
 - `Esc` closes it immediately.
 - Only one instance may be visible at a time.
 - Opening it must not launch a terminal or a separate desktop application.
-- It should follow Ambxst's existing convention for choosing the monitor on which an overlay appears, preferably the focused or active monitor.
+- It follows Ambxst's existing focus convention and appears on the focused monitor.
 
 ### 3.2 Visual presentation
 
@@ -112,13 +113,14 @@ The overlay should reduce noise without hiding useful alternatives.
 ## 6. State and integration
 
 - Add a dedicated visibility state for the shortcuts overlay using Ambxst's existing global-state conventions.
-- Register a dedicated action or global shortcut using the current Ambxst shortcut infrastructure.
+- Register the `shortcuts` global action so it can be toggled with `ambxst run shortcuts`.
+- Keep shortcut registration in the user's personal configuration; deployment scripts must never modify `binds.json`.
 - Integrate the visual component into the same shell/overlay layer used by comparable Ambxst panels.
 - Reuse the existing close-on-Escape and mutual-exclusion behavior if Ambxst provides it.
 - Opening the shortcuts overlay should close or yield to incompatible overlays according to existing shell behavior.
 - Do not alter the current behavior of Dashboard, Config, Launcher, Clipboard, Notes, Power Menu, Overview, or Tools.
 
-The exact QML files and services to modify are intentionally not prescribed here. They must be selected after inspecting the installed Ambxst version and its established architecture.
+The focused integration patch is limited to `modules/services/Visibilities.qml`, `modules/services/GlobalShortcuts.qml`, and `shell.qml`. Canonical overlay sources remain under this independent project's `src/modules/widgets/shortcuts/` tree.
 
 ## 7. Reliability and performance
 
@@ -143,9 +145,9 @@ The exact QML files and services to modify are intentionally not prescribed here
 
 ## 9. Acceptance criteria
 
-The first version is accepted when all of the following are true:
+The following criteria have been satisfied for `v0.1.0` on Ambxst `1.2.6`:
 
-1. `SUPER + F1` opens and closes the overlay reliably.
+1. `SUPER + /` and `ambxst run shortcuts` open and close the overlay reliably.
 2. `Esc` closes it reliably.
 3. The overlay appears as a native Ambxst surface on the appropriate monitor.
 4. It reads the current active shortcuts dynamically rather than embedding the supplied sample list.
@@ -173,7 +175,20 @@ The first version is accepted when all of the following are true:
 9. Reload separately only after explicit approval and confirmation of a recent safety checkpoint.
 10. Commit, tag, or push only after explicit user approval.
 
-## 11. Known environment context
+## 11. `v0.1.0` validation record
+
+- Real installation completed and verified.
+- Uninstall and subsequent reinstall completed and verified.
+- Repeated opening and closing completed without duplicate instances or residual focus capture.
+- Closing with `Esc` verified.
+- Mouse/trackpad scrolling and keyboard navigation verified.
+- Placement on the laptop and external monitor verified according to the focused monitor.
+- Mutual exclusion with other Ambxst overlays verified.
+- Dynamic `binds.json` parsing, grouping, deduplication, family compaction, exclusions, and error states covered by automated parser tests.
+- Transactional installation and uninstall behavior covered by automated tests.
+- The personal `SUPER + /` bind remained outside installation and uninstall ownership.
+
+## 12. Known environment context
 
 - The Ambxst configuration is maintained through the user's dotfiles repository.
 - The expected tracked source is `~/.dotfiles/ambxst/.config/ambxst`.

@@ -1,8 +1,23 @@
 # Ambxst Shortcuts Overlay
 
-Independent source repository for a native, read-only Ambxst keyboard-shortcuts overlay.
+<p align="center">
+  <strong>Native shortcut reference for Ambxst</strong><br>
+  <code>v0.1.0</code> · <code>Ambxst 1.2.6</code> · <code>SUPER + /</code>
+</p>
+
+![Ambxst Shortcuts Overlay showing active shortcuts grouped in three responsive columns](docs/assets/shortcut-overlay-view.png)
+
+A fast, read-only overlay for checking active keyboard shortcuts without leaving the desktop or opening Ambxst settings.
 
 This repository is the only editable source of truth. The Ambxst source tree is an installation and test target, while dotfiles remain declarative configuration only.
+
+## Highlights
+
+- Reads the active `binds.json` dynamically instead of embedding a fixed shortcut list.
+- Groups, deduplicates, and compacts shortcuts into a responsive, scrollable layout.
+- Follows keyboard focus across monitors and closes with `Esc`.
+- Integrates with Ambxst's native theme, overlays, and mutual-exclusion behavior.
+- Provides transactional, reversible installation with no new runtime dependency.
 
 ## Layout
 
@@ -12,6 +27,8 @@ src/modules/widgets/shortcuts/
     ShortcutData.js
 patches/
     ambxst-integration.patch
+docs/assets/
+    shortcut-overlay-view.png
 scripts/
     common.sh
     install.sh
@@ -21,6 +38,7 @@ tests/
     shortcut-data.test.js
     transactional-scripts.test.sh
     fixtures/
+CHANGELOG.md
 ```
 
 - `src/` contains the canonical overlay implementation.
@@ -48,6 +66,16 @@ All three scripts resolve and validate the Ambxst source in the same order:
 4. `$HOME/.local/src/ambxst` as a portable fallback.
 
 The selected path must exist, be absolute, be the root of a Git worktree, and contain the expected Ambxst files. Empty or relative values, `/`, the complete home directory, malformed registry files, and unrelated repositories are rejected. An explicit argument always overrides environment, registry, and fallback values.
+
+## Use
+
+Open or close the installed overlay directly with:
+
+```bash
+ambxst run shortcuts
+```
+
+The suggested personal bind is `SUPER + /`. It toggles the overlay, while `Esc` closes it from inside the panel. The bind belongs to the user's Ambxst configuration: `scripts/install.sh` and `scripts/uninstall.sh` never create, change, or remove it. After uninstalling the overlay, remove the personal bind manually if it is no longer wanted.
 
 ## Verify
 
@@ -84,8 +112,15 @@ scripts/uninstall.sh /path/to/ambxst
 
 Removal first verifies that the installed files exactly match this project, reverses only the integration patch, and deletes only those two known files. Its rollback remains armed through final verification and will not overwrite a file created or modified concurrently. Manually modified installations and unsafe rollback states are reported for manual recovery. No reload is performed.
 
-## Current phase
+## Version `v0.1.0`
 
-The overlay UI and integration are preserved here, but shortcut registration is deferred. `SUPER + F1` and any `binds.json` change belong to a later, explicitly authorized phase.
+The release has been validated on Ambxst `1.2.6`, including:
 
-The normal workflow is: develop and validate here, review and version here, install deliberately, and reload separately only when authorized and protected by a recent checkpoint.
+- real installation, uninstall, and reinstall;
+- repeated opening and closing, including closing with `Esc`;
+- scrolling and keyboard navigation;
+- placement on both monitors according to focus;
+- mutual exclusion with other overlays;
+- automated parser and transactional-script tests.
+
+The independent project remains the sole canonical source. The Ambxst tree is only a deployment and runtime-validation target. Development and versioning happen here; deployment stays deliberate, and reload remains a separate authorized operation protected by a recent checkpoint.

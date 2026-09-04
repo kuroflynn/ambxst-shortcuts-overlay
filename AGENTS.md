@@ -4,6 +4,7 @@
 
 - Read `REQUIREMENTS.md` completely before analyzing or changing code.
 - Treat this repository as the only source of truth for the Ambxst keyboard-shortcuts overlay.
+- Treat `v0.1.0`, validated against Ambxst `1.2.6`, as the first release baseline.
 - Treat `src/modules/widgets/shortcuts/` as the canonical overlay implementation and `patches/ambxst-integration.patch` as the canonical shared-file integration.
 - Treat the resolved Ambxst source (commonly `$HOME/.local/src/ambxst`) only as an external inspection, installation, and test target. Never develop the overlay directly in that tree.
 - Treat the user's Ambxst dotfiles only as declarative configuration. Do not place project sources, scripts, patches, tests, documentation, experiments, or backups there.
@@ -23,7 +24,8 @@
 - Prefer the smallest coherent integration and introduce no runtime dependency or background service.
 - Keep user-facing labels in neutral/Chilean Spanish. Internal identifiers may remain in English when consistent with Ambxst.
 - Keep `references/` local, optional, and ignored by Git; its absence must never block work.
-- `SUPER + F1` registration and changes to `binds.json` belong to a later phase and are not authorized yet.
+- Expose the overlay through `ambxst run shortcuts`. The suggested `SUPER + /` bind belongs to the user's personal configuration and must never be created, changed, or removed by `install.sh` or `uninstall.sh`.
+- After uninstalling, tell the user to remove the personal bind manually if it is no longer wanted.
 
 ## Deployment workflow
 
@@ -43,9 +45,11 @@ Both install and uninstall remain transactional through their final verification
 - Verify the integration patch affects only `modules/services/Visibilities.qml`, `modules/services/GlobalShortcuts.qml`, and `shell.qml`.
 - After implementation, show the focused project diff, checks performed, remaining limitations, and exact deployment files.
 
+The `v0.1.0` runtime baseline has already been verified on Ambxst `1.2.6`: real install, uninstall and reinstall; repeated toggle and `Esc` close; scrolling and keyboard navigation; placement on both monitors according to focus; and mutual exclusion with other overlays.
+
 ## Definition of done
 
-- Every acceptance criterion in `REQUIREMENTS.md` is satisfied or explicitly marked unresolved/deferred.
+- Every acceptance criterion in `REQUIREMENTS.md` is satisfied for the release being delivered.
 - The canonical overlay reads active shortcuts dynamically and never modifies `binds.json`.
 - Installation and uninstallation are safe, idempotent, scoped, and never reload the session.
 - Ambxst starts or reloads without overlay-attributable QML errors when runtime validation is authorized.
