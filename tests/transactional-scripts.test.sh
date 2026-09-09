@@ -99,6 +99,7 @@ new_case() {
     cp -- "${PROJECT_ROOT}/scripts/install.sh" "${CASE_PROJECT}/scripts/install.sh"
     cp -- "${PROJECT_ROOT}/scripts/uninstall.sh" "${CASE_PROJECT}/scripts/uninstall.sh"
     cp -- "${PROJECT_ROOT}/scripts/common.sh" "${CASE_PROJECT}/scripts/common.sh"
+    cp -- "${PROJECT_ROOT}/scripts/gen_candidate" "${CASE_PROJECT}/scripts/gen_candidate"
     cp -- "${PROJECT_ROOT}/tests/fixtures/verify-stub.sh" "${CASE_PROJECT}/scripts/verify.sh"
     cp -- "${PROJECT_ROOT}/tests/fixtures/git-wrapper.sh" "${CASE_BIN}/git"
     cp -- "${PROJECT_ROOT}/tests/fixtures/fs-wrapper.sh" "${CASE_BIN}/ln"
@@ -200,8 +201,8 @@ assert_no_auxiliary_paths() {
 
 find_quarantined_file() {
     local basename="$1"
-    find "${CASE_TARGET}/modules/widgets/shortcuts" -mindepth 2 -maxdepth 2 \
-        -path '*/.ambxst-shortcuts-uninstall.*/*' -name "${basename}" -print -quit
+    find "${CASE_TARGET}/.ambxst-shortcuts-recovery" -mindepth 2 -maxdepth 2 \
+        -path '*/uninstall.*/*' -name "${basename}" -print -quit
 }
 
 make_valid_target() {
@@ -414,6 +415,24 @@ run_resolver_mode() {
         missing-argument)
             resolve_ambxst_target "${resolver_root}/missing"
             ;;
+        argument-cr)
+            resolve_ambxst_target "${cr_argument}"
+            ;;
+        argument-lf)
+            resolve_ambxst_target "${lf_argument}"
+            ;;
+        env-cr)
+            AMBXST_SOURCE_DIR="${cr_argument}" resolve_ambxst_target
+            ;;
+        argument-space)
+            resolve_ambxst_target "${space_target}"
+            ;;
+        argument-tab)
+            resolve_ambxst_target "${tab_target}"
+            ;;
+        argument-utf8)
+            resolve_ambxst_target "${utf8_target}"
+            ;;
         *) fail "modo de resolver desconocido: ${mode}" ;;
     esac
 }
@@ -472,5 +491,46 @@ expect_resolver_failure "la raíz del sistema" "raíz del sistema" root
 expect_resolver_failure "el HOME completo" "HOME completo" home
 expect_resolver_failure "un argumento relativo" "ruta absoluta" relative-argument
 expect_resolver_failure "un argumento inexistente" "no existe" missing-argument
+
+expect_resolver_success() {
+    local label="$1"
+    local expected="$2"
+    local mode="$3"
+    local before=""
+    local after=""
+    local resolved=""
+
+    before="$(resolver_snapshot)"
+    if ! resolved="$(run_resolver_mode "${mode}" 2>&1)"; then
+        fail "el resolver rechazó ${label}"
+    fi
+    after="$(resolver_snapshot)"
+    [[ "${before}" == "${after}" ]] || fail "el resolver modificó archivos para ${label}"
+    [[ "${resolved}" == "${expected}" ]] || fail "${label} resolvió a otra ruta: ${resolved}"
+    pass "el resolver acepta ${label} y lo resuelve sin modificar el árbol"
+}
+
+cr_argument="${resolver_root}/cr-argument"$'\r'
+lf_argument="${resolver_root}/lf-argument"$'\n'"tail"
+mkdir -p -- "${cr_argument}" "${lf_argument}"
+expect_resolver_failure "un argumento con retorno de carro" "retorno de carro" argument-cr
+expect_resolver_failure "un argumento con salto de línea" "salto de línea" argument-lf
+
+mkdir -p -- "${cr_argument}"
+expect_resolver_failure "un entorno con retorno de carro" "retorno de carro" env-cr
+
+printf '%s\r\n' "${registry_target}" > "${data_home}/ambxst/shell_repo"
+expect_resolver_failure "un registro shell_repo con CRLF" "retorno de carro" registry
+printf '%s\n' "${registry_target}" > "${data_home}/ambxst/shell_repo"
+
+space_target="${resolver_root}/con espacio"
+tab_target="${resolver_root}/con"$'\t'"tab"
+utf8_target="${resolver_root}/destino-árbol"
+make_valid_target "${space_target}"
+make_valid_target "${tab_target}"
+make_valid_target "${utf8_target}"
+expect_resolver_success "un destino con espacios" "${space_target}" argument-space
+expect_resolver_success "un destino con tabulaciones" "${tab_target}" argument-tab
+expect_resolver_success "un destino con UTF-8" "${utf8_target}" argument-utf8
 
 printf 'OK: %d pruebas transaccionales superadas; todos los destinos fueron temporales.\n' "${test_count}"

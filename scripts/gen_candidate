@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Emits a fresh candidate path for staging WITHOUT creating any file. The
+# exclusive creation is performed by the caller with `set -o noclobber` followed
+# by `exec {fd}> "$candidate"`, so no inode is pre-materialized that a later
+# open could clobber (and no `mktemp -u`-style unsafe token is relied upon).
+set -euo pipefail
+
+[[ $# -eq 2 ]] || {
+    printf 'USO: %s DIR NOMBRE\n' "$0" >&2
+    exit 2
+}
+dir="$1"
+name="$2"
+[[ -n "${dir}" && "${dir}" == /* ]] || {
+    printf 'gen_candidate: directorio destino no válido: %q\n' "${dir}" >&2
+    exit 2
+}
+[[ -n "${name}" && "${name}" != */* ]] || {
+    printf 'gen_candidate: nombre no válido: %q\n' "${name}" >&2
+    exit 2
+}
+
+printf -v token '%08x%08x%08x' "${RANDOM}" "${SRANDOM:-0}" "${BASHPID:-0}"
+printf '%s\n' "${dir}/.${name}.install.${token}"

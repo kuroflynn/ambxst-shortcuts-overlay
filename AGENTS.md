@@ -4,7 +4,7 @@
 
 - Read `REQUIREMENTS.md` completely before analyzing or changing code.
 - Treat this repository as the only source of truth for the Ambxst keyboard-shortcuts overlay.
-- Treat `v0.1.0`, validated against Ambxst `1.2.6`, as the first release baseline.
+- Treat `v0.1.1`, validated against Ambxst `1.2.6` (isolated hardening and real-session runtime), as the current release baseline. Treat `v0.1.0` as the first release baseline.
 - Treat `src/modules/widgets/shortcuts/` as the canonical overlay implementation and `patches/ambxst-integration.patch` as the canonical shared-file integration.
 - Treat the resolved Ambxst source (commonly `$HOME/.local/src/ambxst`) only as an external inspection, installation, and test target. Never develop the overlay directly in that tree.
 - Treat the user's Ambxst dotfiles only as declarative configuration. Do not place project sources, scripts, patches, tests, documentation, experiments, or backups there.
@@ -13,7 +13,7 @@
 ## Working rules
 
 - Before editing or deploying, inspect Git status, the active branch, repository roots, and the real target of `~/.config/ambxst`.
-- Resolve the Ambxst target in this order: explicit script argument, `AMBXST_SOURCE_DIR`, `${XDG_DATA_HOME:-$HOME/.local/share}/ambxst/shell_repo`, then `$HOME/.local/src/ambxst`. Reject unsafe or non-Ambxst roots.
+- Resolve the Ambxst target in this order: explicit script argument, `AMBXST_SOURCE_DIR`, `${XDG_DATA_HOME:-$HOME/.local/share}/ambxst/shell_repo`, then `$HOME/.local/src/ambxst`. Reject unsafe roots and roots missing the expected Ambxst/Git structure; do not claim provenance or semantic compatibility from structural checks alone.
 - Develop, validate, review, and version changes in this repository first. Deploy only through an explicit, deliberate installation step.
 - Preserve all pre-existing user changes. Never stash, discard, reset, clean, overwrite, commit, tag, or push them without explicit approval.
 - Before reloading Ambxst/Hyprland or applying changes to the live configuration, confirm a recent Timeshift snapshot or Git checkpoint exists. If neither exists, stop.
@@ -36,7 +36,7 @@
 5. Reload Ambxst separately and only with explicit authorization and a confirmed safety checkpoint.
 
 Use `scripts/uninstall.sh [ambxst-target]` to remove only a pristine installation made from this project. It must reject locally modified installed files.
-Both install and uninstall remain transactional through their final verification. A rollback must preserve concurrently modified files, report any operation it cannot safely undo, and require manual recovery instead of hiding a partial rollback.
+Both install and uninstall remain transactional through their final verification. Retain overlay inodes and staging hardlinks under `.ambxst-shortcuts-recovery/`; never automatically purge them based on content checks. Use exact destinations and pinned Linux directory descriptors, reject symbolic deployment ancestors and serialize cooperating deployments. Preserve ambiguous content and report unsafe recovery operations explicitly. The concurrency contract and its same-permission relocation/shared-file/crash limits are defined in REQUIREMENTS.md and README.md; do not claim absolute isolation or immutable backups.
 
 ## Validation
 
@@ -46,6 +46,8 @@ Both install and uninstall remain transactional through their final verification
 - After implementation, show the focused project diff, checks performed, remaining limitations, and exact deployment files.
 
 The `v0.1.0` runtime baseline has already been verified on Ambxst `1.2.6`: real install, uninstall and reinstall; repeated toggle and `Esc` close; scrolling and keyboard navigation; placement on both monitors according to focus; and mutual exclusion with other overlays.
+
+The `v0.1.1` runtime baseline is verified on Ambxst `1.2.6`: migration install from the v0.1.0 installation, reload, repeated toggle and `Esc` close, scrolling and keyboard navigation, placement on both monitors, overlay coexistence/exclusion with Dashboard, lock/unlock, and suspend/wake. T020-4 (live layout switch with the overlay open) was not executed: the overlay keeps pointer and focus while open, making the layout selector unreachable; that is not an overlay failure.
 
 ## Definition of done
 

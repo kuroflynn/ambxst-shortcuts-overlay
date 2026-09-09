@@ -15,6 +15,8 @@ readonly SOURCE_OVERLAY="${SOURCE_DIR}/ShortcutsOverlay.qml"
 readonly SOURCE_DATA="${SOURCE_DIR}/ShortcutData.js"
 readonly TEST_FILE="${PROJECT_ROOT}/tests/shortcut-data.test.js"
 
+validate_ambxst_paths "${TARGET_ROOT}" || exit 1
+
 fail() {
     printf 'ERROR: %s\n' "$*" >&2
     exit 1
@@ -33,6 +35,7 @@ required_project_files=(
     "${PROJECT_ROOT}/scripts/verify.sh"
     "${PROJECT_ROOT}/scripts/common.sh"
     "${TEST_FILE}"
+    "${PROJECT_ROOT}/tests/hardening.test.js"
     "${PROJECT_ROOT}/tests/transactional-scripts.test.sh"
     "${PROJECT_ROOT}/tests/fixtures/verify-stub.sh"
     "${PROJECT_ROOT}/tests/fixtures/git-wrapper.sh"
@@ -43,19 +46,25 @@ for file in "${required_project_files[@]}"; do
     [[ -f "${file}" ]] || fail "Falta un archivo del proyecto: ${file}"
 done
 
-bash -n \
-    "${PROJECT_ROOT}/scripts/common.sh" \
-    "${PROJECT_ROOT}/scripts/install.sh" \
-    "${PROJECT_ROOT}/scripts/uninstall.sh" \
-    "${PROJECT_ROOT}/scripts/verify.sh" \
-    "${PROJECT_ROOT}/tests/transactional-scripts.test.sh" \
-    "${PROJECT_ROOT}/tests/fixtures/verify-stub.sh" \
-    "${PROJECT_ROOT}/tests/fixtures/git-wrapper.sh" \
-    "${PROJECT_ROOT}/tests/fixtures/fs-wrapper.sh"
+# Bash parses only its first script operand; remaining operands become $@.
+for script in "${PROJECT_ROOT}/scripts/"*.sh \
+    "${PROJECT_ROOT}/tests/"*.sh "${PROJECT_ROOT}/tests/fixtures/"*.sh; do
+    bash -n "${script}"
+done
 node "${TEST_FILE}"
+node "${PROJECT_ROOT}/tests/hardening.test.js"
 
-if command -v qmllint >/dev/null 2>&1; then
-    qmllint -I "${TARGET_ROOT}" "${SOURCE_OVERLAY}" "${SOURCE_DATA}"
+qml_linter=""
+if command -v qmllint6 >/dev/null 2>&1; then
+    qml_linter="$(command -v qmllint6)"
+elif [[ -x /usr/lib/qt6/bin/qmllint ]]; then
+    qml_linter=/usr/lib/qt6/bin/qmllint
+elif command -v qmllint >/dev/null 2>&1; then
+    qml_linter="$(command -v qmllint)"
+fi
+if [[ -n "${qml_linter}" ]]; then
+    printf 'QML lint: %s (%s); no equivale a validación runtime de Quickshell.\n' "${qml_linter}" "$("${qml_linter}" --version 2>&1)"
+    "${qml_linter}" -I "${TARGET_ROOT}" "${SOURCE_OVERLAY}" "${SOURCE_DATA}"
 else
     printf 'AVISO: qmllint no está disponible; se omitió esa comprobación.\n' >&2
 fi
@@ -80,13 +89,7 @@ git -C "${TARGET_ROOT}" apply --reverse --check "${PATCH_FILE}" >/dev/null 2>&1 
 readonly TARGET_OVERLAY="${TARGET_ROOT}/modules/widgets/shortcuts/ShortcutsOverlay.qml"
 readonly TARGET_DATA="${TARGET_ROOT}/modules/widgets/shortcuts/ShortcutData.js"
 
-installed_files="absent"
-if [[ -e "${TARGET_OVERLAY}" || -e "${TARGET_DATA}" ]]; then
-    [[ -f "${TARGET_OVERLAY}" && -f "${TARGET_DATA}" ]] || fail "Instalación parcial: falta uno de los archivos del overlay"
-    cmp -s "${SOURCE_OVERLAY}" "${TARGET_OVERLAY}" || fail "ShortcutsOverlay.qml instalado difiere de la fuente canónica"
-    cmp -s "${SOURCE_DATA}" "${TARGET_DATA}" || fail "ShortcutData.js instalado difiere de la fuente canónica"
-    installed_files="matching"
-fi
+installed_files="$(classify_overlay_files "${TARGET_ROOT}" "${SOURCE_DIR}")" || exit 1
 
 if [[ "${direct_applies}" == true && "${inverse_applies}" == false && "${installed_files}" == "absent" ]]; then
     printf 'OK: proyecto válido; overlay no instalado en %s.\n' "${TARGET_ROOT}"

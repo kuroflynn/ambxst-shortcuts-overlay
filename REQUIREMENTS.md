@@ -1,6 +1,7 @@
 # Ambxst keyboard-shortcuts overlay
 
-Status: `v0.1.0` — prepared and validated on Ambxst `1.2.6`
+Status: `v0.1.1` released — hardening and runtime QA against Ambxst `1.2.6`, including real-session T018–T021.
+Baseline: `v0.1.1`, validated against Ambxst `1.2.6` (isolated hardening + real-session runtime). `v0.1.0` / `6ec3870` was the first release baseline; subsequent defects are recorded in `docs/qa/v0.1.0/` and the hardening/runtime reports under `docs/qa/v0.1.1/`.
 Target environment: Arch Linux, Hyprland, Quickshell, Ambxst  
 Primary language: Spanish
 
@@ -12,7 +13,7 @@ Primary language: Spanish
 - The user's Ambxst dotfiles remain declarative configuration and must not contain project files.
 - Development, tests, review, and versioning happen here before deliberate installation. The `v0.1.0` installation, uninstall, and reinstall have been verified in the real target.
 - Installation and uninstallation must be scoped, idempotent, and must never reload Ambxst or restart Quickshell automatically.
-- The scripts resolve their target, in order, from an explicit argument, `AMBXST_SOURCE_DIR`, `${XDG_DATA_HOME:-$HOME/.local/share}/ambxst/shell_repo`, or `$HOME/.local/src/ambxst`. The result must be an absolute, existing, validated Ambxst Git root and must reject dangerous broad roots.
+- The scripts resolve their target, in order, from an explicit argument, `AMBXST_SOURCE_DIR`, `${XDG_DATA_HOME:-$HOME/.local/share}/ambxst/shell_repo`, or `$HOME/.local/src/ambxst`. The result must be an absolute, existing, Git worktree root with the expected Ambxst structure and must reject dangerous broad roots. Structural validation is not proof of identity/provenance; forks remain supported. Patch applicability does not demonstrate semantic compatibility with future versions.
 - The tracked workspace contains only this project. Optional external roots belong in an ignored, machine-local workspace file.
 - `references/` remains local, optional, ignored by Git, and unnecessary in a clone.
 - The installed overlay is exposed as `ambxst run shortcuts`. The suggested `SUPER + /` bind belongs to the user's personal configuration and is never modified by `install.sh` or `uninstall.sh`; after uninstalling, the user removes that bind manually if it is no longer wanted.
@@ -131,7 +132,13 @@ The focused integration patch is limited to `modules/services/Visibilities.qml`,
 - Parsing, grouping, and sorting should complete quickly enough that opening feels immediate.
 - Repeated toggling must not leak components, create duplicate shortcuts, or leave invisible focus-grabbing windows.
 - Installation and uninstallation remain transactional until their final verification succeeds. Rollback operations must first confirm that their patch direction still applies and that project-owned files still match the canonical source.
-- A concurrent modification during rollback must never be overwritten or deleted. Any unsafe or failed rollback operation must remain visible as a manual-recovery error naming the affected path; critical failures must not be suppressed.
+- Preserve retired overlay inodes in `TARGET_ROOT/.ambxst-shortcuts-recovery/` through successful completion and rollback. This retains late writes through already-open descriptors; matching content never authorizes automatic purging. Install staging also retains a durable hardlink. Idempotent invocations create no additional recovery entry.
+- Publication/restoration must use exact destinations and refuse existing files, directories or symlinks. Reject symbolic links in deployment ancestors, anchor overlay leaf operations to open Linux directory descriptors and recheck physical identity. Serialize cooperating deployments with `flock`.
+- Staging must never re-open the temporary name for a truncating write. The candidate name is generated without creating a file (`scripts/gen_candidate`), and the inode is created by a single atomic exclusive open (`set -o noclobber` + `exec {fd}>`, an `O_WRONLY|O_CREAT|O_EXCL` open). A name already occupied by anything (regular file, symlink, directory, FIFO) is abandoned and retired, never truncated, deleted or followed, and never blocks on a special node. The prepared content is written and verified only through that already-open descriptor; a later substitution of the temporary name cannot redirect it. `cat`, `chmod` and an identity check that the name still resolves to the opened object form one verified preparation: any step failure closes the descriptor and aborts before publishing.
+- The resolved target candidate is rejected fail-closed when it contains a line feed or carriage return, whichever source provided it (argument, `AMBXST_SOURCE_DIR`, registry or fallback), before any resolution or write. Tabs, spaces and UTF-8 remain valid; the diagnostic cannot re-inject control bytes.
+- Detected concurrent changes or unsafe/failed recovery steps must produce explicit manual-recovery diagnostics. Preserve ambiguous material instead of overwriting it. Recovery is mutable, requires manual review/cleanup after writers stop, and can remain partial after a failed transaction.
+- These guarantees do not provide isolation from arbitrary same-permission processes relocating opened directories outside the root, changing mounts, deleting recovery or concurrently writing shared Git-patched files. Git checks are not an atomic whole-tree transaction. Abrupt termination/power loss and uncooperative shared-file writers remain limitations; no immutable-backup or crash-durability guarantee is claimed. README and `docs/qa/v0.1.1/DESIGN.md` define the tested contract.
+- Bound shortcut list lengths, argument depth and construction work while accepting actual Qt 6 list sequences. Reject malformed/oversized input into a contained error state. The displayed count means rows after compaction, with correct singular/plural.
 
 ## 8. Out of scope
 
@@ -145,7 +152,7 @@ The focused integration patch is limited to `modules/services/Visibilities.qml`,
 
 ## 9. Acceptance criteria
 
-The following criteria have been satisfied for `v0.1.0` on Ambxst `1.2.6`:
+The following criteria describe the initial `v0.1.0` validation on Ambxst `1.2.6`. Subsequent QA found the defects recorded in `docs/qa/v0.1.0/REPORT.md`. For v0.1.1, hardening was validated with automated and isolated Qt probes and the real-session runtime T018–T021 (results in `docs/qa/v0.1.1/REPORT.md`, adenda J; T020-4 was not executed):
 
 1. `SUPER + /` and `ambxst run shortcuts` open and close the overlay reliably.
 2. `Esc` closes it reliably.
@@ -161,6 +168,7 @@ The following criteria have been satisfied for `v0.1.0` on Ambxst `1.2.6`:
 12. Ambxst starts or reloads without new QML errors or warnings attributable to the overlay.
 13. The implementation introduces no new runtime dependency and performs no network access.
 14. The final diff contains only the project documentation and the minimum required Ambxst integration files. Any exploratory prototype placed under `src/` during development stays inside this project workspace and is not part of the dotfiles diff; remove or clearly mark unused prototypes before final delivery so they don't get mistaken for integration files. Optional local visual material under `references/` remains ignored by Git and is not required in a repository clone.
+15. Post-review regressions (isolated, `tests/` only): create→open swaps of the staging name with a symlink, directory, FIFO, socket or device abort with zero writes; a failure inside the single preparation (e.g. `chmod`) aborts without publishing; published staging preserves device+inode identity and mode. Target resolution rejects LF/CR from any source without modifying the tree, and accepts real destinations with spaces, tabs and UTF-8.
 
 ## 10. Delivery workflow
 

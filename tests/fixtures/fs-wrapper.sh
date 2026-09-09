@@ -6,8 +6,10 @@ readonly command_name="$(basename -- "$0")"
 readonly failure="${TRANSACTION_TEST_FS_FAILURE:-none}"
 readonly overlay_target="${TRANSACTION_TEST_TARGET:?}/modules/widgets/shortcuts/ShortcutsOverlay.qml"
 readonly data_target="${TRANSACTION_TEST_TARGET:?}/modules/widgets/shortcuts/ShortcutData.js"
-readonly source_argument="${@: -2:1}"
-readonly last_argument="${!#}"
+# Production mutations are anchored through /proc/<pid>/fd. Match the actual
+# physical operation, so a change of path spelling cannot disable injection.
+readonly source_argument="$(readlink -m -- "${@: -2:1}")"
+readonly last_argument="$(readlink -m -- "${!#}")"
 
 case "${command_name}:${failure}" in
     ln:publish-second)

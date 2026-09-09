@@ -1,0 +1,11 @@
+{
+  "historical_files_unchanged": 22,
+  "external_files_unchanged": {
+    "/home/kuroflynn/.local/src/ambxst/shell.qml": true,
+    "/home/kuroflynn/.local/src/ambxst/modules/services/GlobalShortcuts.qml": true,
+    "/home/kuroflynn/.local/src/ambxst/modules/services/Visibilities.qml": true,
+    "/home/kuroflynn/.local/src/ambxst/modules/widgets/shortcuts/ShortcutsOverlay.qml": true,
+    "/home/kuroflynn/.local/src/ambxst/modules/widgets/shortcuts/ShortcutData.js": true,
+    "/home/kuroflynn/.config/ambxst/binds.json": true
+  }
+}

@@ -1,0 +1,972 @@
+{
+  "summary": {
+    "pass": 135,
+    "fail": 2,
+    "observations": 14
+  },
+  "cases": [
+    {
+      "id": "parse-reject-\"\"",
+      "status": "PASS"
+    },
+    {
+      "id": "parse-reject-\" \"",
+      "status": "PASS"
+    },
+    {
+      "id": "parse-reject-\"{\"",
+      "status": "PASS"
+    },
+    {
+      "id": "parse-reject-\"null\"",
+      "status": "PASS"
+    },
+    {
+      "id": "parse-reject-\"[]\"",
+      "status": "PASS"
+    },
+    {
+      "id": "parse-reject-\"1\"",
+      "status": "PASS"
+    },
+    {
+      "id": "parse-reject-\"true\"",
+      "status": "PASS"
+    },
+    {
+      "id": "parse-reject-\"\\\"text\\\"\"",
+      "status": "PASS"
+    },
+    {
+      "id": "parse-object-{}",
+      "status": "PASS"
+    },
+    {
+      "id": "parse-object-{\"ambxst\":{}}",
+      "status": "PASS"
+    },
+    {
+      "id": "parse-object-{\"custom\":[]}",
+      "status": "PASS"
+    },
+    {
+      "id": "partial-undefined",
+      "status": "PASS"
+    },
+    {
+      "id": "partial-null",
+      "status": "PASS"
+    },
+    {
+      "id": "partial-[]",
+      "status": "PASS"
+    },
+    {
+      "id": "partial-[null]",
+      "status": "PASS"
+    },
+    {
+      "id": "partial-[{}]",
+      "status": "PASS"
+    },
+    {
+      "id": "partial-[false]",
+      "status": "PASS"
+    },
+    {
+      "id": "partial-[42]",
+      "status": "PASS"
+    },
+    {
+      "id": "partial-[\"x\"]",
+      "status": "PASS"
+    },
+    {
+      "id": "enabled-false",
+      "status": "PASS"
+    },
+    {
+      "id": "action-disabled",
+      "status": "PASS"
+    },
+    {
+      "id": "keys-times-actions",
+      "status": "PASS"
+    },
+    {
+      "id": "action-shape-{\"action\":{\"id\":\"window.close\"}}",
+      "status": "PASS"
+    },
+    {
+      "id": "action-shape-{\"dispatcher\":\"exec\",\"argument\":\"echo a\"}",
+      "status": "PASS"
+    },
+    {
+      "id": "action-shape-{\"actions\":[{\"dispatcher\":\"exec\",\"argument\":\"echo a\"}]}",
+      "status": "PASS"
+    },
+    {
+      "id": "action-shape-{\"actions\":[{\"command\":\"echo a\"}]}",
+      "status": "PASS"
+    },
+    {
+      "id": "command-direct",
+      "status": "OBSERVED",
+      "evidence": {
+        "sections": [],
+        "total": 0,
+        "error": ""
+      }
+    },
+    {
+      "id": "layout-[[\"scrolling\"],\"scrolling\"]",
+      "status": "PASS"
+    },
+    {
+      "id": "layout-[[\"master\"],\"scrolling\"]",
+      "status": "PASS"
+    },
+    {
+      "id": "layout-[[],\"scrolling\"]",
+      "status": "PASS"
+    },
+    {
+      "id": "layout-[null,\"scrolling\"]",
+      "status": "PASS"
+    },
+    {
+      "id": "layout-[[\"master\"],\"\"]",
+      "status": "PASS"
+    },
+    {
+      "id": "layout-change",
+      "status": "PASS"
+    },
+    {
+      "id": "modifier-SUPER",
+      "status": "PASS"
+    },
+    {
+      "id": "modifier-META",
+      "status": "PASS"
+    },
+    {
+      "id": "modifier-MOD4",
+      "status": "PASS"
+    },
+    {
+      "id": "modifier-order-aliases-duplicates",
+      "status": "PASS"
+    },
+    {
+      "id": "key-Escape",
+      "status": "PASS"
+    },
+    {
+      "id": "key-Return",
+      "status": "PASS"
+    },
+    {
+      "id": "key-Enter",
+      "status": "PASS"
+    },
+    {
+      "id": "key-Space",
+      "status": "PASS"
+    },
+    {
+      "id": "key-Up",
+      "status": "PASS"
+    },
+    {
+      "id": "key-Down",
+      "status": "PASS"
+    },
+    {
+      "id": "key-Left",
+      "status": "PASS"
+    },
+    {
+      "id": "key-Right",
+      "status": "PASS"
+    },
+    {
+      "id": "key-mouse:272",
+      "status": "PASS"
+    },
+    {
+      "id": "key-mouse:273",
+      "status": "PASS"
+    },
+    {
+      "id": "key-mouse:274",
+      "status": "PASS"
+    },
+    {
+      "id": "key-mouse_up",
+      "status": "PASS"
+    },
+    {
+      "id": "key-mouse_down",
+      "status": "PASS"
+    },
+    {
+      "id": "key-XF86AudioPlay",
+      "status": "PASS"
+    },
+    {
+      "id": "key-XF86AudioRaiseVolume",
+      "status": "PASS"
+    },
+    {
+      "id": "key-XF86MonBrightnessUp",
+      "status": "PASS"
+    },
+    {
+      "id": "key-XF86MonBrightnessDown",
+      "status": "PASS"
+    },
+    {
+      "id": "key-XF86Future",
+      "status": "PASS"
+    },
+    {
+      "id": "key-unknownKey",
+      "status": "PASS"
+    },
+    {
+      "id": "very-long-key",
+      "status": "PASS"
+    },
+    {
+      "id": "dedup-stable-args",
+      "status": "PASS"
+    },
+    {
+      "id": "different-args",
+      "status": "PASS"
+    },
+    {
+      "id": "nested-args-order",
+      "status": "PASS"
+    },
+    {
+      "id": "array-order-significant",
+      "status": "PASS"
+    },
+    {
+      "id": "equivalent-aliases",
+      "status": "PASS"
+    },
+    {
+      "id": "duplicate-combo-alias",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.switch-2",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.switch-6",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.switch-10",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.switch-gap",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.switch-starts2",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.switch-repeat",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.switch-repeat-type",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.switch-out0",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.switch-out11",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.switch-fraction",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.switch-different-modifiers",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.switch-extra-alternative",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.switch-two-full-schemes",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-2",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-6",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-10",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-gap",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-starts2",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-repeat",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-repeat-type",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-out0",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-out11",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-fraction",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-different-modifiers",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-extra-alternative",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-two-full-schemes",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-silent-2",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-silent-6",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-silent-10",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-silent-gap",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-silent-starts2",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-silent-repeat",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-silent-repeat-type",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-silent-out0",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-silent-out11",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-silent-fraction",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-silent-different-modifiers",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-silent-extra-alternative",
+      "status": "PASS"
+    },
+    {
+      "id": "family-workspace.move-window-silent-two-full-schemes",
+      "status": "PASS"
+    },
+    {
+      "id": "family-scrolling.move-column-workspace-2",
+      "status": "PASS"
+    },
+    {
+      "id": "family-scrolling.move-column-workspace-6",
+      "status": "PASS"
+    },
+    {
+      "id": "family-scrolling.move-column-workspace-10",
+      "status": "PASS"
+    },
+    {
+      "id": "family-scrolling.move-column-workspace-gap",
+      "status": "PASS"
+    },
+    {
+      "id": "family-scrolling.move-column-workspace-starts2",
+      "status": "PASS"
+    },
+    {
+      "id": "family-scrolling.move-column-workspace-repeat",
+      "status": "PASS"
+    },
+    {
+      "id": "family-scrolling.move-column-workspace-repeat-type",
+      "status": "PASS"
+    },
+    {
+      "id": "family-scrolling.move-column-workspace-out0",
+      "status": "PASS"
+    },
+    {
+      "id": "family-scrolling.move-column-workspace-out11",
+      "status": "PASS"
+    },
+    {
+      "id": "family-scrolling.move-column-workspace-fraction",
+      "status": "PASS"
+    },
+    {
+      "id": "family-scrolling.move-column-workspace-different-modifiers",
+      "status": "PASS"
+    },
+    {
+      "id": "family-scrolling.move-column-workspace-extra-alternative",
+      "status": "PASS"
+    },
+    {
+      "id": "family-scrolling.move-column-workspace-two-full-schemes",
+      "status": "PASS"
+    },
+    {
+      "id": "family-preservation-1000-generated-configurations",
+      "status": "PASS",
+      "evidence": {
+        "configurations": 1000
+      }
+    },
+    {
+      "id": "fallback-future.action",
+      "status": "PASS"
+    },
+    {
+      "id": "fallback-window.future",
+      "status": "PASS"
+    },
+    {
+      "id": "fallback-system.future",
+      "status": "PASS"
+    },
+    {
+      "id": "fallback-layout.future",
+      "status": "PASS"
+    },
+    {
+      "id": "fallback-brightness.future",
+      "status": "PASS"
+    },
+    {
+      "id": "hardware-switch:Lid Switch",
+      "status": "PASS"
+    },
+    {
+      "id": "hardware-SWITCH:LID SWITCH",
+      "status": "PASS"
+    },
+    {
+      "id": "hardware-event:any",
+      "status": "PASS"
+    },
+    {
+      "id": "hardware-Lid Switch",
+      "status": "PASS"
+    },
+    {
+      "id": "hardware-switch:on:Lid Switch",
+      "status": "PASS"
+    },
+    {
+      "id": "hardware-name-Turn display off on lid close",
+      "status": "FAIL",
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n"
+    },
+    {
+      "id": "hardware-name-Turn display on lid open",
+      "status": "FAIL",
+      "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n"
+    },
+    {
+      "id": "hardware-name-false-positive",
+      "status": "OBSERVED",
+      "evidence": {
+        "sections": [
+          {
+            "id": "ambxst",
+            "title": "Ambxst y aplicaciones",
+            "rows": [
+              {
+                "identity": "ambxst.tools|{}",
+                "actionId": "ambxst.tools",
+                "args": {},
+                "label": "Abrir herramientas",
+                "group": "ambxst",
+                "combos": [
+                  {
+                    "modifiers": [
+                      "SUPER"
+                    ],
+                    "key": "T",
+                    "rawKey": "T",
+                    "text": "SUPER + T"
+                  }
+                ],
+                "compactOrder": 100
+              }
+            ]
+          }
+        ],
+        "total": 1,
+        "error": ""
+      }
+    },
+    {
+      "id": "hardware-leading-whitespace",
+      "status": "OBSERVED",
+      "evidence": {
+        "sections": [],
+        "total": 0,
+        "error": ""
+      }
+    },
+    {
+      "id": "counter-after-family",
+      "status": "OBSERVED",
+      "evidence": {
+        "inputActions": 10,
+        "result": {
+          "sections": [
+            {
+              "id": "workspaces",
+              "title": "Espacios de trabajo",
+              "rows": [
+                {
+                  "identity": "workspace.switch|family",
+                  "actionId": "workspace.switch",
+                  "args": {
+                    "first": 1,
+                    "last": 10
+                  },
+                  "label": "Cambiar de espacio de trabajo",
+                  "group": "workspaces",
+                  "combos": [
+                    {
+                      "modifiers": [
+                        "SUPER"
+                      ],
+                      "key": "1…0",
+                      "rawKey": "1…0",
+                      "text": "SUPER + 1…0"
+                    }
+                  ],
+                  "compactOrder": 0
+                }
+              ]
+            }
+          ],
+          "total": 1,
+          "error": ""
+        }
+      }
+    },
+    {
+      "id": "nonstring-fallback-crash",
+      "status": "OBSERVED",
+      "evidence": {
+        "sections": [
+          {
+            "id": "ambxst",
+            "title": "Ambxst y aplicaciones",
+            "rows": [
+              {
+                "identity": "future.one|{}",
+                "actionId": "future.one",
+                "args": {},
+                "label": "42",
+                "group": "ambxst",
+                "combos": [
+                  {
+                    "modifiers": [],
+                    "key": "A",
+                    "rawKey": "A",
+                    "text": "A"
+                  }
+                ],
+                "compactOrder": 100
+              },
+              {
+                "identity": "future.two|{}",
+                "actionId": "future.two",
+                "args": {},
+                "label": "43",
+                "group": "ambxst",
+                "combos": [
+                  {
+                    "modifiers": [],
+                    "key": "B",
+                    "rawKey": "B",
+                    "text": "B"
+                  }
+                ],
+                "compactOrder": 100
+              }
+            ]
+          }
+        ],
+        "total": 2,
+        "error": ""
+      }
+    },
+    {
+      "id": "prototype-id-constructor",
+      "status": "OBSERVED",
+      "evidence": {
+        "sections": [
+          {
+            "id": "ambxst",
+            "title": "Ambxst y aplicaciones",
+            "rows": [
+              {
+                "identity": "constructor|{}",
+                "actionId": "constructor",
+                "args": {},
+                "label": "Constructor",
+                "group": "ambxst",
+                "combos": [
+                  {
+                    "modifiers": [
+                      "SUPER"
+                    ],
+                    "key": "C",
+                    "rawKey": "C",
+                    "text": "SUPER + C"
+                  }
+                ],
+                "compactOrder": 100
+              }
+            ]
+          }
+        ],
+        "total": 1,
+        "error": ""
+      }
+    },
+    {
+      "id": "prototype-id-toString",
+      "status": "OBSERVED",
+      "evidence": {
+        "sections": [
+          {
+            "id": "ambxst",
+            "title": "Ambxst y aplicaciones",
+            "rows": [
+              {
+                "identity": "toString|{}",
+                "actionId": "toString",
+                "args": {},
+                "label": "ToString",
+                "group": "ambxst",
+                "combos": [
+                  {
+                    "modifiers": [
+                      "SUPER"
+                    ],
+                    "key": "C",
+                    "rawKey": "C",
+                    "text": "SUPER + C"
+                  }
+                ],
+                "compactOrder": 100
+              }
+            ]
+          }
+        ],
+        "total": 1,
+        "error": ""
+      }
+    },
+    {
+      "id": "prototype-id-__proto__",
+      "status": "OBSERVED",
+      "evidence": {
+        "sections": [
+          {
+            "id": "ambxst",
+            "title": "Ambxst y aplicaciones",
+            "rows": [
+              {
+                "identity": "__proto__|{}",
+                "actionId": "__proto__",
+                "args": {},
+                "label": "Proto",
+                "group": "ambxst",
+                "combos": [
+                  {
+                    "modifiers": [
+                      "SUPER"
+                    ],
+                    "key": "C",
+                    "rawKey": "C",
+                    "text": "SUPER + C"
+                  }
+                ],
+                "compactOrder": 100
+              }
+            ]
+          }
+        ],
+        "total": 1,
+        "error": ""
+      }
+    },
+    {
+      "id": "length-object-freezes-main-thread",
+      "status": "OBSERVED",
+      "evidence": {
+        "sections": [],
+        "total": 0,
+        "error": "La configuración de atajos no es válida o excede los límites de lectura."
+      }
+    },
+    {
+      "id": "nested-keys-length-object",
+      "status": "OBSERVED",
+      "evidence": {
+        "sections": [],
+        "total": 0,
+        "error": "La configuración de atajos no es válida o excede los límites de lectura."
+      }
+    },
+    {
+      "id": "modifier-string",
+      "status": "OBSERVED",
+      "error": "Error: Invalid shortcut list"
+    },
+    {
+      "id": "args-string-collision",
+      "status": "OBSERVED",
+      "evidence": {
+        "sections": [
+          {
+            "id": "ambxst",
+            "title": "Ambxst y aplicaciones",
+            "rows": [
+              {
+                "identity": "exec|{}",
+                "actionId": "exec",
+                "args": {},
+                "label": "Exec",
+                "group": "ambxst",
+                "combos": [
+                  {
+                    "modifiers": [
+                      "SUPER"
+                    ],
+                    "key": "A",
+                    "rawKey": "A",
+                    "text": "SUPER + A"
+                  },
+                  {
+                    "modifiers": [
+                      "SUPER"
+                    ],
+                    "key": "B",
+                    "rawKey": "B",
+                    "text": "SUPER + B"
+                  }
+                ],
+                "compactOrder": 100
+              }
+            ]
+          }
+        ],
+        "total": 1,
+        "error": ""
+      }
+    },
+    {
+      "id": "refresh-absent",
+      "status": "PASS"
+    },
+    {
+      "id": "refresh-unloaded",
+      "status": "PASS"
+    },
+    {
+      "id": "refresh-throws",
+      "status": "PASS"
+    },
+    {
+      "id": "refresh-invalid",
+      "status": "PASS"
+    },
+    {
+      "id": "refresh-no-adapter",
+      "status": "PASS"
+    },
+    {
+      "id": "refresh-partial-adapter",
+      "status": "PASS"
+    },
+    {
+      "id": "refresh-empty",
+      "status": "PASS"
+    },
+    {
+      "id": "refresh-build-error-not-contained",
+      "status": "OBSERVED",
+      "evidence": {
+        "sections": [
+          {
+            "id": "ambxst",
+            "title": "Ambxst y aplicaciones",
+            "rows": [
+              {
+                "identity": "future.one|{}",
+                "actionId": "future.one",
+                "args": {},
+                "label": "42",
+                "group": "ambxst",
+                "combos": [
+                  {
+                    "modifiers": [],
+                    "key": "A",
+                    "rawKey": "A",
+                    "text": "A"
+                  }
+                ],
+                "compactOrder": 100
+              },
+              {
+                "identity": "future.two|{}",
+                "actionId": "future.two",
+                "args": {},
+                "label": "43",
+                "group": "ambxst",
+                "combos": [
+                  {
+                    "modifiers": [],
+                    "key": "B",
+                    "rawKey": "B",
+                    "text": "B"
+                  }
+                ],
+                "compactOrder": 100
+              }
+            ]
+          }
+        ],
+        "count": 2,
+        "error": "",
+        "y": 0
+      }
+    },
+    {
+      "id": "scroll-clamp-300-100",
+      "status": "PASS"
+    },
+    {
+      "id": "scroll-clamp-300-300",
+      "status": "PASS"
+    },
+    {
+      "id": "scroll-clamp-300-1500",
+      "status": "PASS"
+    },
+    {
+      "id": "panel-dimensions",
+      "status": "OBSERVED",
+      "evidence": [
+        {
+          "screenWidth": 256,
+          "panel": 320,
+          "columns": 1,
+          "overflow": true
+        },
+        {
+          "screenWidth": 320,
+          "panel": 320,
+          "columns": 1,
+          "overflow": false
+        },
+        {
+          "screenWidth": 640,
+          "panel": 592,
+          "columns": 1,
+          "overflow": false
+        },
+        {
+          "screenWidth": 728,
+          "panel": 680,
+          "columns": 2,
+          "overflow": false
+        },
+        {
+          "screenWidth": 1088,
+          "panel": 1040,
+          "columns": 3,
+          "overflow": false
+        },
+        {
+          "screenWidth": 1707,
+          "panel": 1260,
+          "columns": 3,
+          "overflow": false
+        },
+        {
+          "screenWidth": 2560,
+          "panel": 1260,
+          "columns": 3,
+          "overflow": false
+        },
+        {
+          "screenWidth": 5120,
+          "panel": 1260,
+          "columns": 3,
+          "overflow": false
+        }
+      ]
+    }
+  ]
+}

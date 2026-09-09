@@ -64,7 +64,46 @@ var FAMILY_DEFINITIONS = [
 
 var MODIFIER_ORDER = ["SUPER", "CTRL", "ALT", "SHIFT"];
 
+// Bounds apply to consumed shortcut data, not QObject introspection. Qt 6
+// list<string>/list<var> are V4Sequence objects, not JavaScript Arrays.
+function checkedList(value, maximum) {
+    if (value === undefined || value === null)
+        return [];
+    if (!Array.isArray(value) && Object.prototype.toString.call(value) !== "[object V4Sequence]")
+        throw new Error("Invalid shortcut list");
+    if (!Number.isInteger(value.length) || value.length < 0 || value.length > maximum)
+        throw new Error("Shortcut list limit");
+    return value;
+}
+
+function spend(budget, amount) {
+    budget.remaining -= amount;
+    if (budget.remaining < 0)
+        throw new Error("Shortcut work limit");
+}
+
+function displayString(value) {
+    if (value === undefined || value === null)
+        return "";
+    if (typeof value !== "string" && typeof value !== "number" && typeof value !== "boolean")
+        throw new Error("Invalid shortcut text");
+    var text = String(value);
+    if (text.length > 32768)
+        throw new Error("Shortcut text limit");
+    return text;
+}
+
+function ownValue(object, key) {
+    return Object.prototype.hasOwnProperty.call(object, key) ? object[key] : undefined;
+}
+
+function rowCountLabel(count) {
+    return count === 1 ? "1 fila de atajos" : String(count) + " filas de atajos";
+}
+
 function parseJson(text) {
+    if (typeof text === "string" && text.length > 2097152)
+        return { ok: false, data: null, error: "La configuración de atajos es demasiado grande." };
     if (typeof text !== "string" || text.trim().length === 0) {
         return { ok: false, data: null, error: "El archivo de atajos está vacío." };
     }
@@ -81,6 +120,14 @@ function parseJson(text) {
 }
 
 function build(source, currentLayout) {
+    try {
+        return buildModel(source, currentLayout);
+    } catch (error) {
+        return { sections: [], total: 0, error: "La configuración de atajos no es válida o excede los límites de lectura." };
+    }
+}
+
+function buildModel(source, currentLayout) {
     var model = source;
     if (typeof source === "string") {
         var parsed = parseJson(source);
@@ -89,12 +136,13 @@ function build(source, currentLayout) {
         model = parsed.data;
     }
 
-    if (!model || typeof model !== "object")
+    if (!model || typeof model !== "object" || Array.isArray(model))
         return { sections: [], total: 0, error: "La configuración de atajos no está disponible." };
 
-    var rowsByIdentity = {};
-    collectCoreBindings(model.ambxst, rowsByIdentity, currentLayout);
-    collectCustomBindings(model.custom, rowsByIdentity, currentLayout);
+    var rowsByIdentity = Object.create(null);
+    var budget = { remaining: 100000 };
+    collectCoreBindings(model.ambxst, rowsByIdentity, currentLayout, budget);
+    collectCustomBindings(model.custom, rowsByIdentity, currentLayout, budget);
 
     var rows = [];
     var identities = Object.keys(rowsByIdentity);
@@ -128,23 +176,23 @@ function build(source, currentLayout) {
     return { sections: sections, total: total, error: "" };
 }
 
-function collectCoreBindings(ambxst, rowsByIdentity, currentLayout) {
+function collectCoreBindings(ambxst, rowsByIdentity, currentLayout, budget) {
     if (!ambxst || typeof ambxst !== "object")
         return;
 
     var knownCoreKeys = ["launcher", "dashboard", "assistant", "clipboard", "emoji", "notes", "tmux", "wallpapers"];
-    var seen = {};
+    var seen = Object.create(null);
     for (var i = 0; i < knownCoreKeys.length; i++) {
         var coreKey = knownCoreKeys[i];
         seen[coreKey] = true;
-        addBinding(ambxst[coreKey], coreKey, "ambxst", rowsByIdentity, currentLayout);
+        addBinding(ambxst[coreKey], coreKey, "ambxst", rowsByIdentity, currentLayout, budget);
     }
 
     var extraKeys = safeObjectKeys(ambxst);
     for (var extraIndex = 0; extraIndex < extraKeys.length; extraIndex++) {
         var extraKey = extraKeys[extraIndex];
         if (extraKey !== "system" && !seen[extraKey])
-            addBinding(ambxst[extraKey], extraKey, "ambxst", rowsByIdentity, currentLayout);
+            addBinding(ambxst[extraKey], extraKey, "ambxst", rowsByIdentity, currentLayout, budget);
     }
 
     var system = ambxst.system;
@@ -152,43 +200,46 @@ function collectCoreBindings(ambxst, rowsByIdentity, currentLayout) {
         return;
 
     var knownSystemKeys = ["overview", "powermenu", "config", "lockscreen", "tools", "screenshot", "screenrecord", "lens", "reload", "quit"];
-    seen = {};
+    seen = Object.create(null);
     for (var systemIndex = 0; systemIndex < knownSystemKeys.length; systemIndex++) {
         var systemKey = knownSystemKeys[systemIndex];
         seen[systemKey] = true;
-        addBinding(system[systemKey], systemKey, "system", rowsByIdentity, currentLayout);
+        addBinding(system[systemKey], systemKey, "system", rowsByIdentity, currentLayout, budget);
     }
 
     extraKeys = safeObjectKeys(system);
     for (var futureIndex = 0; futureIndex < extraKeys.length; futureIndex++) {
         var futureKey = extraKeys[futureIndex];
         if (!seen[futureKey])
-            addBinding(system[futureKey], futureKey, "system", rowsByIdentity, currentLayout);
+            addBinding(system[futureKey], futureKey, "system", rowsByIdentity, currentLayout, budget);
     }
 }
 
-function collectCustomBindings(custom, rowsByIdentity, currentLayout) {
-    if (!custom || typeof custom.length !== "number")
-        return;
-
+function collectCustomBindings(custom, rowsByIdentity, currentLayout, budget) {
+    custom = checkedList(custom, 4096);
     for (var i = 0; i < custom.length; i++) {
         var bind = custom[i];
         if (!bind || bind.enabled === false)
             continue;
-        addBinding(bind, bind.name || "", "", rowsByIdentity, currentLayout);
+        addBinding(bind, bind.name, "", rowsByIdentity, currentLayout, budget);
     }
 }
 
-function addBinding(bind, fallbackName, groupHint, rowsByIdentity, currentLayout) {
-    if (!bind || bind.enabled === false)
+function addBinding(bind, fallbackName, groupHint, rowsByIdentity, currentLayout, budget) {
+    if (!bind || typeof bind !== "object" || bind.enabled === false)
         return;
+    spend(budget, 1);
+    fallbackName = displayString(fallbackName);
+    spend(budget, fallbackName.length);
 
     var keys = bindingKeys(bind);
     var combos = [];
     for (var keyIndex = 0; keyIndex < keys.length; keyIndex++) {
-        if (isHardwareEvent(keys[keyIndex], fallbackName))
+        if (isHardwareEvent(keys[keyIndex]))
             continue;
         var combo = normalizeCombo(keys[keyIndex]);
+        if (combo)
+            spend(budget, combo.text.length);
         if (combo && !comboExists(combos, combo.text))
             combos.push(combo);
     }
@@ -205,7 +256,8 @@ function addBinding(bind, fallbackName, groupHint, rowsByIdentity, currentLayout
         var actionId = canonicalActionId(rawActionId);
         var args = actionArguments(action);
         var description = describeAction(rawActionId, args, fallbackName, groupHint);
-        var identity = actionId + "|" + stableStringify(args);
+        var identity = actionId + "|" + stableStringify(args, budget);
+        spend(budget, identity.length);
 
         if (!rowsByIdentity[identity]) {
             rowsByIdentity[identity] = {
@@ -221,6 +273,7 @@ function addBinding(bind, fallbackName, groupHint, rowsByIdentity, currentLayout
 
         var row = rowsByIdentity[identity];
         for (var comboIndex = 0; comboIndex < combos.length; comboIndex++) {
+            spend(budget, row.combos.length + combos[comboIndex].text.length + 1);
             if (!comboExists(row.combos, combos[comboIndex].text))
                 row.combos.push(combos[comboIndex]);
         }
@@ -228,16 +281,17 @@ function addBinding(bind, fallbackName, groupHint, rowsByIdentity, currentLayout
 }
 
 function bindingKeys(bind) {
-    if (bind.keys && typeof bind.keys.length === "number")
-        return copyList(bind.keys);
+    if (bind.keys !== undefined && bind.keys !== null)
+        return copyList(checkedList(bind.keys, 64));
     if (bind.key !== undefined)
         return [bind];
     return [];
 }
 
 function bindingActions(bind) {
-    if (bind.actions && typeof bind.actions.length === "number" && bind.actions.length > 0)
-        return copyList(bind.actions);
+    var actions = checkedList(bind.actions, 64);
+    if (actions.length > 0)
+        return copyList(actions);
     if (bind.action)
         return [bind.action];
     if (bind.id || bind.dispatcher)
@@ -249,8 +303,8 @@ function isActionActive(action, currentLayout) {
     if (!action || action.enabled === false)
         return false;
 
-    var layouts = action.layouts;
-    if (!layouts || typeof layouts.length !== "number" || layouts.length === 0 || !currentLayout)
+    var layouts = checkedList(action.layouts, 64);
+    if (layouts.length === 0 || !currentLayout)
         return true;
 
     for (var i = 0; i < layouts.length; i++) {
@@ -263,7 +317,7 @@ function isActionActive(action, currentLayout) {
 function actionIdentifier(action) {
     if (!action)
         return "unknown";
-    return String(action.id || action.dispatcher || action.command || "unknown");
+    return displayString(action.id || action.dispatcher || action.command || "unknown");
 }
 
 function canonicalActionId(actionId) {
@@ -272,7 +326,7 @@ function canonicalActionId(actionId) {
         "media.stop-locked": "media.stop",
         "media.previous": "media.prev"
     };
-    return aliases[actionId] || actionId;
+    return ownValue(aliases, actionId) || actionId;
 }
 
 function actionArguments(action) {
@@ -286,12 +340,12 @@ function actionArguments(action) {
 }
 
 function describeAction(actionId, args, fallbackName, groupHint) {
-    var known = ACTION_LABELS[actionId];
+    var known = ownValue(ACTION_LABELS, actionId);
     if (known)
         return known;
 
     var directionLabels = { u: "arriba", d: "abajo", l: "a la izquierda", r: "a la derecha" };
-    var direction = directionLabels[String(args.direction || "").toLowerCase()] || "";
+    var direction = ownValue(directionLabels, String(args.direction || "").toLowerCase()) || "";
     if (actionId === "window.focus")
         return { label: direction ? "Enfocar " + direction : "Cambiar foco", group: "windows" };
     if (actionId === "window.move")
@@ -362,22 +416,18 @@ function readableIdentifier(identifier) {
     return text.length > 0 ? text.charAt(0).toUpperCase() + text.slice(1) : "Atajo";
 }
 
-function isHardwareEvent(keyObject, fallbackName) {
-    var rawKey = String((keyObject && keyObject.key) || "").toLowerCase();
-    var name = String(fallbackName || "").toLowerCase();
+function isHardwareEvent(keyObject) {
+    var rawKey = displayString((keyObject && keyObject.key) || "").trim().toLowerCase();
     return rawKey.indexOf("switch:") === 0
         || rawKey.indexOf("event:") === 0
-        || rawKey.indexOf("lid switch") !== -1
-        || name.indexOf("lid switch") !== -1
-        || name.indexOf("on lid close") !== -1
-        || name.indexOf("on lid open") !== -1;
+        || rawKey === "lid switch";
 }
 
 function normalizeCombo(keyObject) {
     if (!keyObject)
         return null;
 
-    var rawKey = String(keyObject.key || "");
+    var rawKey = displayString(keyObject.key || "");
     if (rawKey.length === 0)
         return null;
 
@@ -402,9 +452,10 @@ function normalizeCombo(keyObject) {
 
 function normalizeModifiers(modifiers) {
     var normalized = [];
-    if (modifiers && typeof modifiers.length === "number") {
+    modifiers = checkedList(modifiers, 32);
+    if (modifiers.length > 0) {
         for (var i = 0; i < modifiers.length; i++) {
-            var modifier = String(modifiers[i]).toUpperCase();
+            var modifier = displayString(modifiers[i]).toUpperCase();
             if (modifier === "MOD4" || modifier === "META")
                 modifier = "SUPER";
             if (modifier === "CONTROL")
@@ -458,7 +509,7 @@ function normalizeKey(key) {
         "XF86MONBRIGHTNESSDOWN": "Brillo −",
         "XF86CALCULATOR": "Calculadora"
     };
-    if (aliases[upper] !== undefined)
+    if (ownValue(aliases, upper) !== undefined)
         return aliases[upper];
     if (upper.indexOf("MOUSE:") === 0) {
         var button = upper.substring(6);
@@ -475,7 +526,7 @@ function normalizeKey(key) {
 
 function compactFamily(rows, definition) {
     var candidates = [];
-    var indexMap = {};
+    var indexMap = Object.create(null);
     for (var i = 0; i < rows.length; i++) {
         var row = rows[i];
         if (row.actionId !== definition.actionId)
@@ -587,6 +638,7 @@ function compareRows(left, right) {
 }
 
 function copyList(list) {
+    list = checkedList(list, 4096);
     var result = [];
     for (var i = 0; i < list.length; i++)
         result.push(list[i]);
@@ -594,30 +646,39 @@ function copyList(list) {
 }
 
 function safeObjectKeys(object) {
-    try {
-        return Object.keys(object || {});
-    } catch (error) {
-        return [];
-    }
+    var keys = Object.keys(object || {});
+    if (keys.length > 4096)
+        throw new Error("Shortcut object limit");
+    return keys;
 }
 
-function stableStringify(value) {
+function stableStringify(value, budget, depth) {
+    budget = budget || { remaining: 100000 };
+    depth = depth || 0;
+    spend(budget, 1);
+    if (depth > 24)
+        throw new Error("Shortcut nesting limit");
     if (value === null || value === undefined)
         return "null";
-    if (typeof value !== "object")
+    if (typeof value !== "object") {
+        var scalar = JSON.stringify(displayString(value));
+        // Preserve the original scalar type for action identity.
+        spend(budget, scalar.length);
         return JSON.stringify(value);
+    }
     if (Array.isArray(value)) {
+        checkedList(value, 4096);
         var items = [];
         for (var arrayIndex = 0; arrayIndex < value.length; arrayIndex++)
-            items.push(stableStringify(value[arrayIndex]));
+            items.push(stableStringify(value[arrayIndex], budget, depth + 1));
         return "[" + items.join(",") + "]";
     }
-
     var keys = safeObjectKeys(value).sort();
     var properties = [];
     for (var keyIndex = 0; keyIndex < keys.length; keyIndex++) {
         var key = keys[keyIndex];
-        properties.push(JSON.stringify(key) + ":" + stableStringify(value[key]));
+        spend(budget, key.length);
+        properties.push(JSON.stringify(key) + ":" + stableStringify(value[key], budget, depth + 1));
     }
     return "{" + properties.join(",") + "}";
 }

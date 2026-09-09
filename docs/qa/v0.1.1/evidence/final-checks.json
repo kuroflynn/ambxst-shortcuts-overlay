@@ -1,0 +1,74 @@
+[
+  {
+    "command": [
+      "git",
+      "status",
+      "--short"
+    ],
+    "exit": 0,
+    "stdout": " M AGENTS.md\n M CHANGELOG.md\n M README.md\n M REQUIREMENTS.md\n M scripts/common.sh\n M scripts/install.sh\n M scripts/uninstall.sh\n M scripts/verify.sh\n M src/modules/widgets/shortcuts/ShortcutData.js\n M src/modules/widgets/shortcuts/ShortcutsOverlay.qml\n M tests/fixtures/fs-wrapper.sh\n M tests/transactional-scripts.test.sh\n?? docs/qa/\n?? tests/deployment.test.py\n?? tests/fixtures/race-wrapper.py\n?? tests/full-tree-cycle.test.py\n?? tests/hardening.test.js\n?? tests/qml.test.py\n?? tests/run.sh\n?? tests/verify.test.sh\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "branch",
+      "--show-current"
+    ],
+    "exit": 0,
+    "stdout": "main\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "6ec3870e23160a799feac7e64deaa8b47d26ce52\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "tag",
+      "--points-at",
+      "HEAD"
+    ],
+    "exit": 0,
+    "stdout": "v0.1.0\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--stat"
+    ],
+    "exit": 0,
+    "stdout": " AGENTS.md                                          |   4 +-\n CHANGELOG.md                                       |  11 +\n README.md                                          |  49 +++-\n REQUIREMENTS.md                                    |  13 +-\n scripts/common.sh                                  | 158 ++++++++++-\n scripts/install.sh                                 | 299 ++++++---------------\n scripts/uninstall.sh                               | 245 +++++------------\n scripts/verify.sh                                  |  39 +--\n src/modules/widgets/shortcuts/ShortcutData.js      | 165 ++++++++----\n src/modules/widgets/shortcuts/ShortcutsOverlay.qml |  28 +-\n tests/fixtures/fs-wrapper.sh                       |   6 +-\n tests/transactional-scripts.test.sh                |   4 +-\n 12 files changed, 514 insertions(+), 507 deletions(-)\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "apply",
+      "--numstat",
+      "patches/ambxst-integration.patch"
+    ],
+    "exit": 0,
+    "stdout": "1\t0\tmodules/services/GlobalShortcuts.qml\n4\t3\tmodules/services/Visibilities.qml\n16\t1\tshell.qml\n",
+    "stderr": ""
+  }
+]

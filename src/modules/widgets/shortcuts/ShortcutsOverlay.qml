@@ -76,15 +76,21 @@ PanelWindow {
             return;
         }
 
-        const activeBinds = {
-            ambxst: adapter.ambxst,
-            custom: adapter.custom || []
-        };
-        const result = ShortcutData.build(activeBinds, GlobalStates.compositorLayout);
-        sections = result.sections;
-        shortcutCount = result.total;
-        dataError = result.error;
-        shortcutsFlickable.contentY = 0;
+        try {
+            const activeBinds = {
+                ambxst: adapter.ambxst,
+                custom: adapter.custom || []
+            };
+            const result = ShortcutData.build(activeBinds, GlobalStates.compositorLayout);
+            sections = result.sections;
+            shortcutCount = result.total;
+            dataError = result.error;
+            shortcutsFlickable.contentY = 0;
+        } catch (error) {
+            sections = [];
+            shortcutCount = 0;
+            dataError = "No se pudo construir la lista de atajos.";
+        }
     }
 
     function scrollBy(amount) {
@@ -247,7 +253,7 @@ PanelWindow {
                         }
 
                         Text {
-                            text: root.shortcutCount > 0 ? `${root.shortcutCount} acciones activas` : "Referencia de solo lectura"
+                            text: root.shortcutCount > 0 ? ShortcutData.rowCountLabel(root.shortcutCount) : "Referencia de solo lectura"
                             font.family: Config.theme.font
                             font.pixelSize: Styling.fontSize(-2)
                             color: Colors.overSurfaceVariant
@@ -406,7 +412,7 @@ PanelWindow {
                                                     font.family: Config.theme.font
                                                     font.pixelSize: Styling.fontSize(-2)
                                                     color: Colors.overSurfaceVariant
-                                                    wrapMode: Text.WordWrap
+                                                    wrapMode: Text.Wrap
                                                 }
 
                                                 Rectangle {
