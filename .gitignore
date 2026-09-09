@@ -6,3 +6,10 @@
 ambxst-shortcuts-overlay.local.code-workspace
 
 references/*
+
+# Local QA artifacts
+docs/qa/v0.1.0/
+docs/qa/v0.1.1/evidence/*.log
+
+# Local runtime recovery
+.ambxst-shortcuts-recovery/
