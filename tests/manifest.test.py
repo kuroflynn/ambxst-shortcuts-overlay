@@ -18,7 +18,7 @@ sys.dont_write_bytecode = True
 import manifest_validate as mv
 
 PROJECT = Path(__file__).resolve().parents[1]
-ID = "kurostain.shortcuts-overlay"
+ID = "kuroflynn.shortcuts-overlay"
 VERSION = "0.2.0"
 RANGE = ">=1.3.3 <1.4.0"
 # Every entry must be a full commit that this release has really been validated
@@ -54,7 +54,7 @@ def main():
     check(manifest["version"] == VERSION, f"version debe ser {VERSION}")
     check(re.fullmatch(r"^[0-9]+\.[0-9]+\.[0-9]+$", manifest["version"]), "version no cumple el patrón")
     check(manifest.get("license") == "MIT", "license debe ser MIT")
-    check(manifest.get("author") == "KuroStain", "author debe ser KuroStain")
+    check(manifest.get("author") == "kuroflynn", "author debe ser kuroflynn")
     check(manifest.get("description"), "description debe existir")
 
     compat = manifest["compatibility"]
@@ -124,7 +124,7 @@ def main():
 
 MANIFEST_TEMPLATE = {
     "manifestVersion": 1,
-    "id": "kurostain.shortcuts-overlay",
+    "id": "kuroflynn.shortcuts-overlay",
     "name": "Shortcuts overlay",
     "version": "0.2.0",
     "compatibility": {"api": 1, "ambxst": ">=1.3.3 <1.4.0"},
@@ -205,7 +205,7 @@ def validate_effective_manifest():
           "expectedSha256 sin replace", "expectedSha256 sin replace (paridad backend)")
     probe(lambda d: d["operations"][0].update(source="no-such-file"),
           "source no es un archivo regular", "source inexistente (paridad backend)")
-    probe(lambda d: d.update(dependencies=["kurostain.shortcuts-overlay"]),
+    probe(lambda d: d.update(dependencies=["kuroflynn.shortcuts-overlay"]),
           "sí mismo", "dependencia auto-referencial (paridad backend)")
     probe(lambda d: d.update(dependencySources={"ghost.mod": "https://example.invalid/a.pk3"}),
           "no está declarada", "dependencySource sin dependency (paridad backend)")

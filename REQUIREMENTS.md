@@ -1,6 +1,6 @@
 # Ambxst keyboard-shortcuts overlay (native mod)
 
-Status: `v0.2.0` — native Ambxst mod (`kurostain.shortcuts-overlay`) declared against Ambxst `1.3.3`; composition and patch applicability verified on base `af9f8ad4...`.
+Status: `v0.2.0` — native Ambxst mod (`kuroflynn.shortcuts-overlay`) declared against Ambxst `1.3.3`; composition and patch applicability verified on base `af9f8ad4...`.
 Baseline: `v0.1.1` was the previous release, validated against Ambxst `1.2.6` (isolated hardening + real-session runtime). `v0.1.0` / `6ec3870` was the first release baseline. Defects are recorded in `docs/qa/v0.1.0/` and `docs/qa/v0.1.1/`.
 Target environment: Arch Linux, Hyprland, Quickshell, Ambxst
 Primary language: Spanish
@@ -164,7 +164,7 @@ The following criteria describe the `v0.1.0`/`v0.1.1` validation on Ambxst `1.2.
 11. Existing Ambxst panels, animations, and shortcuts continue working (runtime: pending v0.2.0 activation).
 12. Ambxst starts or reloads without new QML errors or warnings attributable to the overlay (runtime: pending v0.2.0 activation).
 13. The implementation introduces no new runtime dependency and performs no network access.
-14. `ambxst.mod.json` matches the schema: id `kurostain.shortcuts-overlay`, version `0.2.0`, API 1, `ambxst` `>=1.3.3 <1.4.0`, MIT, `testedBaseCommits` limited to genuinely validated commits (`af9f8ad4...`), no dependencies/conflicts/commands/settings, one read-only permission, two `overlay` operations plus one `patch`, and no `replace: true`.
+14. `ambxst.mod.json` matches the schema: id `kuroflynn.shortcuts-overlay`, version `0.2.0`, API 1, `ambxst` `>=1.3.3 <1.4.0`, MIT, `testedBaseCommits` limited to genuinely validated commits (`af9f8ad4...`), no dependencies/conflicts/commands/settings, one read-only permission, two `overlay` operations plus one `patch`, and no `replace: true`.
 15. Post-review, project-only validations: the manifest checker passes 119 checks against the vendored schema and the backend parity rules (exact `const` semantics — `true` never equals `1` — and `propertyNames`/`additionalProperties` apply even without `properties`); the composition test (69 checks) composes in `/tmp`, asserts byte-identical payloads, dead-hook hardening, three-way-merge fallback, concurrent-insertion resolution, abort on a `--3way` failure without unmerged files, executable-mode preservation, linked-worktree targets, and a read-only delivered tree; `verify.sh` (18 checks) rejects invalid manifests, `replace: true`, widened patch scope, broken payload/Bash, missing payloads, empty or invalid CLI usage, and never writes to the target.
 
 ## 10. Delivery workflow

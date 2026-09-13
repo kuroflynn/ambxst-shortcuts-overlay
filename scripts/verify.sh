@@ -109,12 +109,12 @@ def die(message):
     print(f"ERROR: {message}", file=sys.stderr)
     sys.exit(1)
 
-if data.get("id") != "kurostain.shortcuts-overlay":
+if data.get("id") != "kuroflynn.shortcuts-overlay":
     die(f"id inesperado: {data.get('id')!r}")
 if data.get("license") != "MIT":
     die(f"license debe ser MIT, se obtuvo {data.get('license')!r}")
-if data.get("author") != "KuroStain":
-    die(f"author debe ser KuroStain, se obtuvo {data.get('author')!r}")
+if data.get("author") != "kuroflynn":
+    die(f"author debe ser kuroflynn, se obtuvo {data.get('author')!r}")
 compat = data.get("compatibility") or {}
 if compat.get("api") != 1:
     die(f"compatibility.api debe ser 1, se obtuvo {compat.get('api')!r}")

@@ -2,7 +2,7 @@
 
 ## [v0.2.0] - 2026-09-12
 
-- Rebuilt the package as a native Ambxst mod (`kurostain.shortcuts-overlay`, manifest `ambxst.mod.json`, API 1, `ambxst >=1.3.3 <1.4.0`, MIT). No overlay behavior or design changes; the v0.1.1 `ShortcutsOverlay.qml`/`ShortcutData.js` content and the focused integration patch are preserved.
+- Rebuilt the package as a native Ambxst mod (`kuroflynn.shortcuts-overlay`, manifest `ambxst.mod.json`, API 1, `ambxst >=1.3.3 <1.4.0`, MIT). No overlay behavior or design changes; the v0.1.1 `ShortcutsOverlay.qml`/`ShortcutData.js` content and the focused integration patch are preserved.
 - Moved the canonical overlay from `src/modules/widgets/shortcuts/` to `payload/modules/widgets/shortcuts/`. The patch now ships as a `patch` operation; both overlay targets are absent from the tested base, so no `replace: true` is used.
 - Removed the legacy installer (`scripts/install.sh`, `uninstall.sh`, `common.sh`, `gen_candidate`) from this branch; it remains available at tag `v0.1.1`. `assets`/activation/removal are handled by the Ambxst mod manager, never by this project.
 - Rewrote `scripts/verify.sh` as a read-only native-package verifier: manifest constraints (schema, fixed three-operation layout, no `replace: true`/`expectedSha256`, safe payload paths, recorded range and tested base), payload presence, patch scope (`Visibilities.qml`, `GlobalShortcuts.qml`, `shell.qml`), payload/Bash syntax, `qmllint`, and, when given an Ambxst tree, manager-style composition in `/tmp` only.

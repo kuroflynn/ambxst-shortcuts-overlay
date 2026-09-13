@@ -2,7 +2,7 @@
 
 <p align="center">
   <strong>Native shortcut reference for Ambxst</strong><br>
-  <code>v0.2.0 (release)</code> · <code>Ambxst 1.3.3</code> · <code>mod: kurostain.shortcuts-overlay</code> · <code>SUPER + /</code>
+  <code>v0.2.0 (release)</code> · <code>Ambxst 1.3.3</code> · <code>mod: kuroflynn.shortcuts-overlay</code> · <code>SUPER + /</code>
 </p>
 
 ![Ambxst Shortcuts Overlay showing active shortcuts grouped in three responsive columns](docs/assets/shortcut-overlay-view.png)
@@ -13,7 +13,7 @@ This repository is the only editable source of truth. The Ambxst source tree is 
 
 ## Highlights
 
-- Ships as a native Ambxst mod (`kurostain.shortcuts-overlay`), installed and activated by Ambxst's own mod manager; no `install.sh`/`uninstall.sh` and no new runtime dependency.
+- Ships as a native Ambxst mod (`kuroflynn.shortcuts-overlay`), installed and activated by Ambxst's own mod manager; no `install.sh`/`uninstall.sh` and no new runtime dependency.
 - Reads the active `binds.json` dynamically instead of embedding a fixed shortcut list.
 - Groups, deduplicates, and compacts shortcuts into a responsive, scrollable layout.
 - Follows keyboard focus across monitors and closes with `Esc`.

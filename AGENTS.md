@@ -4,7 +4,7 @@
 
 - Read `REQUIREMENTS.md` completely before analyzing or changing code.
 - Treat this repository as the only source of truth for the Ambxst keyboard-shortcuts overlay.
-- Treat `v0.2.0` as the current release baseline: a native Ambxst mod (`kurostain.shortcuts-overlay`) declared for Ambxst `>=1.3.3 <1.4.0`, tested base `af9f8ad4...`. Treat `v0.1.1` (validated against Ambxst `1.2.6`) and `v0.1.0` as prior release baselines retained at their tags.
+- Treat `v0.2.0` as the current release baseline: a native Ambxst mod (`kuroflynn.shortcuts-overlay`) declared for Ambxst `>=1.3.3 <1.4.0`, tested base `af9f8ad4...`. Treat `v0.1.1` (validated against Ambxst `1.2.6`) and `v0.1.0` as prior release baselines retained at their tags.
 - Treat `payload/modules/widgets/shortcuts/` as the canonical overlay implementation, `patches/ambxst-integration.patch` as the canonical shared-file integration, and `ambxst.mod.json` as the package declaration.
 - Treat the resolved Ambxst source (commonly `$HOME/.local/src/ambxst`) only as an external inspection and composition target. Never develop or write in that tree.
 - Treat the user's Ambxst dotfiles only as declarative configuration. Do not place project sources, scripts, patches, tests, documentation, experiments, or backups there.
