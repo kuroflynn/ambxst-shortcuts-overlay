@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
-const source = path.resolve(__dirname, '../src/modules/widgets/shortcuts');
+const source = path.resolve(__dirname, '../payload/modules/widgets/shortcuts');
 const api = vm.createContext({});
 vm.runInContext(fs.readFileSync(path.join(source, 'ShortcutData.js'), 'utf8').replace(/^\.pragma library\s*/, ''), api);
 let count = 0;

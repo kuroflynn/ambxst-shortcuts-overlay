@@ -6,7 +6,7 @@ const fs = require("fs");
 const path = require("path");
 const vm = require("vm");
 
-const sourcePath = path.resolve(__dirname, "../src/modules/widgets/shortcuts/ShortcutData.js");
+const sourcePath = path.resolve(__dirname, "../payload/modules/widgets/shortcuts/ShortcutData.js");
 const source = fs.readFileSync(sourcePath, "utf8").replace(/^\.pragma library\s*/, "");
 const api = {};
 vm.createContext(api);

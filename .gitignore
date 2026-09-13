@@ -11,5 +11,5 @@ references/*
 docs/qa/v0.1.0/
 docs/qa/v0.1.1/evidence/*.log
 
-# Local runtime recovery
+# Local runtime recovery (legacy v0.1.1 installer; retained only at that tag)
 .ambxst-shortcuts-recovery/

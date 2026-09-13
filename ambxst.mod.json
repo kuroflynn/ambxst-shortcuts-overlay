@@ -1,0 +1,39 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Axenide/Ambxst/dev/docs/mods/manifest.schema.json",
+  "manifestVersion": 1,
+  "id": "kuroflynn.shortcuts-overlay",
+  "name": "Shortcuts overlay",
+  "version": "0.2.0",
+  "description": "Quick, read-only reference of the active keyboard shortcuts. Renders the current binds.json as a native Ambxst overlay grouped by section and adds the 'shortcuts' global action so it can be toggled with 'ambxst run shortcuts'. Does not modify binds.json.",
+  "license": "MIT",
+  "author": "kuroflynn",
+  "compatibility": {
+    "api": 1,
+    "ambxst": ">=1.3.3 <1.4.0",
+    "testedBaseCommits": [
+      "af9f8ad4f42d7cd77f57a7c75f6a2a5d1fb59674"
+    ]
+  },
+  "dependencies": [],
+  "conflicts": [],
+  "commands": [],
+  "permissions": [
+    "Lee la configuración activa de atajos de Ambxst (solo lectura)"
+  ],
+  "operations": [
+    {
+      "type": "overlay",
+      "source": "payload/modules/widgets/shortcuts/ShortcutsOverlay.qml",
+      "target": "modules/widgets/shortcuts/ShortcutsOverlay.qml"
+    },
+    {
+      "type": "overlay",
+      "source": "payload/modules/widgets/shortcuts/ShortcutData.js",
+      "target": "modules/widgets/shortcuts/ShortcutData.js"
+    },
+    {
+      "type": "patch",
+      "source": "patches/ambxst-integration.patch"
+    }
+  ]
+}

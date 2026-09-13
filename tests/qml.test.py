@@ -6,7 +6,7 @@ project = Path(__file__).resolve().parents[1]
 runner = shutil.which('qmltestrunner6') or '/usr/lib/qt6/bin/qmltestrunner'
 if not Path(runner).is_file():
     raise SystemExit('Qt 6 qmltestrunner unavailable; this probe was NOT executed.')
-source = project / 'src/modules/widgets/shortcuts'
+source = project / 'payload/modules/widgets/shortcuts'
 qml = (source / 'ShortcutsOverlay.qml').read_text()
 start = qml.index('delegate: Item {', qml.index('model: sectionCard.modelData.rows')) + len('delegate: ')
 opening = qml.index('{', start); depth = 1; end = opening+1
