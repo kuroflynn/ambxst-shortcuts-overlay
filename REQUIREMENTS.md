@@ -149,11 +149,11 @@ The focused integration patch is limited to `modules/services/Visibilities.qml`,
 
 ## 9. Acceptance criteria
 
-The following criteria describe the `v0.1.0`/`v0.1.1` validation on Ambxst `1.2.6` (results in `docs/qa/v0.1.0/REPORT.md` and `docs/qa/v0.1.1/REPORT.md`, adenda J; T020-4 was not executed). For `v0.2.0`, the packaging criteria below replace the installer-centric ones and the runtime criteria remain pending for a native activation:
+The following criteria describe the `v0.1.0`/`v0.1.1` validation on Ambxst `1.2.6` (results in `docs/qa/v0.1.0/REPORT.md` and `docs/qa/v0.1.1/REPORT.md`, adenda J; T020-4 was not executed). **DEPRECATED:** since `v0.2.0`, the T018–T021 identifiers (toggle/Esc, navigation/scroll, focus/multi-monitor, coexistence) are **deprecated** and must not be reused or re-executed as-is for the native mod; the v0.2.0 runtime smoke QA lives in `docs/qa/v0.2.0/REPORT.md`. For `v0.2.0`, the packaging criteria below replace the installer-centric ones and the runtime criteria are verified against the native release candidate in that report:
 
-1. `SUPER + /` and `ambxst run shortcuts` open and close the overlay reliably (runtime: pending v0.2.0 activation).
-2. `Esc` closes it reliably (runtime: pending v0.2.0 activation).
-3. The overlay appears as a native Ambxst surface on the appropriate monitor (runtime: pending v0.2.0 activation).
+1. `SUPER + /` and `ambxst run shortcuts` open and close the overlay reliably.
+2. `Esc` closes it reliably.
+3. The overlay appears as a native Ambxst surface on the appropriate monitor.
 4. It reads the current active shortcuts dynamically rather than embedding the supplied sample list.
 5. It shows the main Ambxst, window, workspace, layout, system, and multimedia groups.
 6. Numbered workspace families are compacted into readable rows.
@@ -161,8 +161,8 @@ The following criteria describe the `v0.1.0`/`v0.1.1` validation on Ambxst `1.2.
 8. Lid-switch and other non-keyboard hardware events are not shown.
 9. Long content remains usable through responsive columns and scrolling.
 10. Invalid or missing shortcut data produces a contained error state and no shell crash.
-11. Existing Ambxst panels, animations, and shortcuts continue working (runtime: pending v0.2.0 activation).
-12. Ambxst starts or reloads without new QML errors or warnings attributable to the overlay (runtime: pending v0.2.0 activation).
+11. Existing Ambxst panels, animations, and shortcuts continue working.
+12. Ambxst starts or reloads without new QML errors or warnings attributable to the overlay.
 13. The implementation introduces no new runtime dependency and performs no network access.
 14. `ambxst.mod.json` matches the schema: id `kuroflynn.shortcuts-overlay`, version `0.2.0`, API 1, `ambxst` `>=1.3.3 <1.4.0`, MIT, `testedBaseCommits` limited to genuinely validated commits (`af9f8ad4...`), no dependencies/conflicts/commands/settings, one read-only permission, two `overlay` operations plus one `patch`, and no `replace: true`.
 15. Post-review, project-only validations: the manifest checker passes 119 checks against the vendored schema and the backend parity rules (exact `const` semantics — `true` never equals `1` — and `propertyNames`/`additionalProperties` apply even without `properties`); the composition test (69 checks) composes in `/tmp`, asserts byte-identical payloads, dead-hook hardening, three-way-merge fallback, concurrent-insertion resolution, abort on a `--3way` failure without unmerged files, executable-mode preservation, linked-worktree targets, and a read-only delivered tree; `verify.sh` (18 checks) rejects invalid manifests, `replace: true`, widened patch scope, broken payload/Bash, missing payloads, empty or invalid CLI usage, and never writes to the target.

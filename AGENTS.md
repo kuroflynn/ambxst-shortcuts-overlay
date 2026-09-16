@@ -47,9 +47,9 @@
 
 The `v0.1.0` runtime baseline was verified on Ambxst `1.2.6`: real install, uninstall and reinstall; repeated toggle and `Esc` close; scrolling and keyboard navigation; placement on both monitors according to focus; and mutual exclusion with other overlays.
 
-The `v0.1.1` runtime baseline was verified on Ambxst `1.2.6`: migration install from the v0.1.0 installation, reload, repeated toggle and `Esc` close, scrolling and keyboard navigation, placement on both monitors, overlay coexistence/exclusion with Dashboard, lock/unlock, and suspend/wake. T020-4 (live layout switch with the overlay open) was not executed: the overlay keeps pointer and focus while open, making the layout selector unreachable; that is not an overlay failure.
+The `v0.1.1` runtime baseline was verified on Ambxst `1.2.6` (T018–T021; **DEPRECATED since v0.2.0**, superseded by `docs/qa/v0.2.0/REPORT.md`): migration install from the v0.1.0 installation, reload, repeated toggle and `Esc` close, scrolling and keyboard navigation, placement on both monitors, overlay coexistence/exclusion with Dashboard, lock/unlock, and suspend/wake. T020-4 (live layout switch with the overlay open) was not executed: the overlay keeps pointer and focus while open, making the layout selector unreachable; that is not an overlay failure.
 
-The `v0.2.0` native-mod baseline is verified structurally only (manifest, composition in `/tmp`, verbatim patch on `af9f8ad4...`). Native activation and runtime behavior remain **pending** until explicitly authorized.
+The `v0.2.0` native-mod baseline is verified structurally (manifest, composition in `/tmp`, verbatim patch on `af9f8ad4...`) and its runtime smoke validation was completed on Ambxst `1.3.3`; results are documented in `docs/qa/v0.2.0/REPORT.md` (verdict: ready).
 
 ## Definition of done
 

@@ -105,9 +105,9 @@ The suggested personal bind is `SUPER + /`. It toggles the overlay, while `Esc` 
 
 `v0.2.0` converts the project to a native Ambxst mod. It preserves the v0.1.1 overlay behavior and design: same `ShortcutsOverlay.qml` and `ShortcutData.js` content, same integration patch. The former installer scripts (`install.sh`, `uninstall.sh`, `common.sh`, `gen_candidate`) and their recovery state live on at tag `v0.1.1` and are not part of this release.
 
-Compatibility is declared against Ambxst `>=1.3.3 <1.4.0` and recorded as tested on base `af9f8ad4...` (tag `1.3.3`). The mod composes and the patch applies verbatim on that base; this is checked in `/tmp` by `tests/composition.test.py` and `scripts/verify.sh`. Runtime behavior on a live session (toggle, `Esc`, scrolling, dual-monitor focus, coexistence with other overlays) has **not** been re-validated for a native activation and is the pending runtime validation.
+Compatibility is declared against Ambxst `>=1.3.3 <1.4.0` and recorded as tested on base `af9f8ad4...` (tag `1.3.3`). The mod composes and the patch applies verbatim on that base; this is checked in `/tmp` by `tests/composition.test.py` and `scripts/verify.sh`. Runtime behavior on a live session (toggle, `Esc`, scrolling, dual-monitor focus, coexistence with other overlays) was validated for the native candidate in `docs/qa/v0.2.0/REPORT.md`.
 
-For reference, `docs/qa/v0.1.1/REPORT.md` records the v0.1.1 runtime results (T018 PASS, T019-A/B PASS, T020-1/2/3 PASS, T020-4 NOT EXECUTED, T021-A/B/C PASS) and `docs/qa/v0.1.0/REPORT.md` the v0.1.0 audit. Pre-existing recovery material from v0.1.1 installations (`.ambxst-shortcuts-recovery/`) is intentionally left untouched by this release; its cleanup remains manual.
+For reference, `docs/qa/v0.1.1/REPORT.md` records the v0.1.1 runtime results (T018 PASS, T019-A/B PASS, T020-1/2/3 PASS, T020-4 NOT EXECUTED, T021-A/B/C PASS) and `docs/qa/v0.1.0/REPORT.md` the v0.1.0 audit. **DEPRECATED since v0.2.0:** T018–T021 are superseded by the smoke QA in `docs/qa/v0.2.0/REPORT.md`. Pre-existing recovery material from v0.1.1 installations (`.ambxst-shortcuts-recovery/`) is intentionally left untouched by this release; its cleanup remains manual.
 
 ## Version `v0.1.1`
 

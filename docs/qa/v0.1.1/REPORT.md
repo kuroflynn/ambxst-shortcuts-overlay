@@ -1,5 +1,7 @@
 # QA de hardening — candidato v0.1.1
 
+> **DEPRECADO desde v0.2.0:** los identificadores T018–T021 de esta sessión quedan **deprecados** y no deben reutilizarse ni volver a ejecutarse tal cual para el mod nativo de v0.2.0. El smoke QA runtime nativo de v0.2.0 se documenta en `docs/qa/v0.2.0/REPORT.md`. Este reporte se conserva como histórico de la línea v0.1.x sobre Ambxst `1.2.6`.
+
 Fecha de cierre: 2026-09-07. Baseline: `v0.1.0`, commit `6ec3870e23160a799feac7e64deaa8b47d26ce52`, rama `main`.
 
 **Resultado: preparado para revisión y una nueva ronda QA; validación aislada PASS.** No se creó la release ni un tag. T018–T021 de la sesión real **NO EJECUTADOS**. La validación runtime inicial de v0.1.0 no sustituye esa validación para este candidato.
