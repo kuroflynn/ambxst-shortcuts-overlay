@@ -35,9 +35,9 @@ var ACTION_LABELS = {
     "window.toggle-floating": { label: "Alternar ventana flotante", group: "windows" },
     "workspace.toggle-special": { label: "Alternar espacio especial", group: "workspaces" },
     "workspace.move-window-special": { label: "Mover ventana al espacio especial", group: "workspaces" },
-    "scrolling.promote": { label: "Promover columna", group: "layout" },
+    "scrolling.promote": { label: "Separar ventana en nueva columna", group: "layout" },
     "scrolling.toggle-fit": { label: "Ajustar columnas al espacio", group: "layout" },
-    "scrolling.toggle-full-column": { label: "Alternar ancho completo", group: "layout" },
+    "scrolling.toggle-full-column": { label: "Cambiar ancho de columna predefinido", group: "layout" },
     "system.lock": { label: "Bloquear sesión", group: "system" },
     "system.lock-locked": { label: "Bloquear sesión", group: "system" },
     "system.calculator": { label: "Abrir calculadora", group: "ambxst" },
@@ -57,8 +57,8 @@ var ACTION_LABELS = {
 
 var FAMILY_DEFINITIONS = [
     { actionId: "workspace.switch", label: "Cambiar de espacio de trabajo", group: "workspaces", order: 0 },
-    { actionId: "workspace.move-window", label: "Mover ventana a espacio de trabajo", group: "workspaces", order: 1 },
-    { actionId: "workspace.move-window-silent", label: "Mover ventana silenciosamente", group: "workspaces", order: 2 },
+    { actionId: "workspace.move-window", label: "Mover ventana y cambiar al espacio", group: "workspaces", order: 1 },
+    { actionId: "workspace.move-window-silent", label: "Mover ventana sin cambiar de espacio", group: "workspaces", order: 2 },
     { actionId: "scrolling.move-column-workspace", label: "Mover columna a espacio de trabajo", group: "layout", order: 0 }
 ];
 
@@ -355,9 +355,9 @@ function describeAction(actionId, args, fallbackName, groupHint) {
     if (actionId === "workspace.switch")
         return { label: "Espacio de trabajo " + String(args.index || ""), group: "workspaces" };
     if (actionId === "workspace.move-window")
-        return { label: "Mover ventana al espacio " + String(args.index || ""), group: "workspaces" };
+        return { label: "Mover ventana al espacio " + String(args.index || "") + " y cambiar a él", group: "workspaces" };
     if (actionId === "workspace.move-window-silent")
-        return { label: "Mover silenciosamente al espacio " + String(args.index || ""), group: "workspaces" };
+        return { label: "Mover ventana al espacio " + String(args.index || "") + " sin cambiar de espacio", group: "workspaces" };
     if (actionId === "workspace.switch-relative")
         return { label: signedDirection(args.offset, "Espacio anterior", "Espacio siguiente", "Cambiar espacio"), group: "workspaces" };
     if (actionId === "workspace.switch-occupied")
